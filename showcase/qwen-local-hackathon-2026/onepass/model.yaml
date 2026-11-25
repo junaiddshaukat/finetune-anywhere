@@ -1,0 +1,33 @@
+project_name: onepass
+slug: onepass
+event: qwen-local-hackathon-2026
+members:
+- name: Abdul Samad
+  github: samadpls
+one_liner: A tiny Qwen that answers typed questions as probabilities from one forward pass, with zero generated tokens.
+base_model: Qwen/Qwen3-0.6B
+training_tool: other
+training_platform: kaggle
+method: lora
+dataset:
+  description: >-
+    68,061 texts with 138,928 typed questions (yes/no, choose one, pick a level) from 19 open
+    datasets: 16 human-labelled sets (BoolQ, MultiNLI, Banking77, GoEmotions and others, with
+    rater shares kept as soft targets) plus n4ze3m/typed-decisions-synth (MIT),
+    decisionmodels/sn92-specialists (CC BY 4.0) and tasksource/procedural-typed-decisions
+    (Apache-2.0). Each source was checked for its license, who made the labels and overlap with
+    the benchmark. The benchmark's own training split was never used.
+  size: 68061
+  link: https://github.com/samadpls/onepass/blob/main/docs/training.md
+model_link: https://huggingface.co/samadpls/onepass-qwen3-0.6b-GGUF
+quantization: GGUF Q8_0 (639 MB, recommended); Q4_K_M (397 MB) is also published
+runtime: llama.cpp
+hardware_tested: MacBook Pro (M3 Pro), CPU and Apple GPU through llama.cpp. Trained on 2x NVIDIA T4 (Kaggle, free).
+demo_video: https://www.youtube.com/watch?v=ZZR8TRsX1h4
+repo_link: https://github.com/samadpls/onepass
+before_after:
+  prompt: |-
+    State: {"order_id": "A-1042", "status": "delivered", "days_since_delivery": 41, "return_window_days": 30, "item": "headphones", "request": "return, the item stopped working"}
+    Question (true or false): The order can still be returned under the return window.
+  base_output: 'Qwen3-0.6B before training: true 94%, false 6%. Wrong: 41 days is past the 30-day window.'
+  finetuned_output: 'onepass 0.6B after training: false 69%, true 31%. Right.'
