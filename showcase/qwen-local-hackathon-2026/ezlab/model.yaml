@@ -1,0 +1,32 @@
+project_name: EzLab
+slug: ezlab
+event: qwen-local-hackathon-2026
+members:
+  - name: Hassan Mahmood
+    github: https://github.com/Hassanmahmood4
+one_liner: Offline Qwen lab-report copilot that turns CS manuals into Word/PDF reports for Pakistani university students.
+base_model: Qwen/Qwen2.5-Coder-1.5B-Instruct
+training_tool: unsloth
+training_platform: kaggle
+method: lora
+dataset:
+  description: Synthetic Pakistani CS university lab chat pairs (PF/OOP/DSA/OS/DB/Networks/ML/etc.) with noisy campus aliases, unit anomalies, and grounded JSON task solutions.
+  size: 3700
+  link: https://github.com/Hassanmahmood4/EzLab/tree/main/data
+model_link: https://huggingface.co/HassanM44/ezlab-1.5b-q4_k_m
+quantization: Q4_K_M
+runtime: llama.cpp (llama-cpp-python)
+hardware_tested: Apple MacBook (CPU / Metal off), ~1–2 GB RAM for the 1.5B Q4 GGUF
+demo_video: https://lnkd.in/p/d3uED8wC
+repo_link: https://github.com/Hassanmahmood4/EzLab
+before_after:
+  prompt: |
+    Course: CS-100 — Programming Fundamentals Lab
+    Lab: Lab 01 — Input, Loops and Functions
+    Task 1 — Factorial
+    Write a function that returns n! for n >= 0 and print factorial(5).
+    Return JSON only with keys code and output.
+  base_output: |
+    {"code": "def factorial(n):\n    return 1 if n<=1 else n*factorial(n-1)\nprint(factorial(5))", "output": ""}
+  finetuned_output: |
+    {"code": "\"\"\"Task 1: Factorial\"\"\"\ndef factorial(n: int) -> int:\n    if n < 0:\n        raise ValueError(\"n must be >= 0\")\n    result = 1\n    for i in range(2, n + 1):\n        result *= i\n    return result\n\ndef main() -> None:\n    n = 5\n    print(f\"factorial({n}) = {factorial(n)}\")\n\nif __name__ == \"__main__\":\n    main()\n", "output": "factorial(5) = 120\n"}
