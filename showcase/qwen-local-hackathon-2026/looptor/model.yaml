@@ -1,0 +1,48 @@
+project_name: 'LoopTor'
+slug: 'looptor'
+event: 'qwen-local-hackathon-2026'
+members:
+- name: 'Daim Ali'
+  github: 'Daimx1214'
+one_liner: 'A LoRA fine-tune that teaches Qwen3-1.7B to think without looping: concise reasoning that always ends with an answer.'
+base_model: 'Qwen3-1.7B (thinking mode)'
+training_tool: 'Unsloth (LoRA r=16, alpha=32, all-linear)'
+training_platform: 'Kaggle GPU T4 (free); Best-of-N generation started on Google Colab T4'
+method: 'lora-sft'
+dataset:
+  description: 'Self-generated + synthetic: Best-of-N shortest-correct loop-free traces sampled from the base model itself (SEER-style rejection sampling), programmatic concise traces, loop-recovery examples, direct-answer examples. No real user data.'
+  size: 1263
+  link: 'https://huggingface.co/Daimx1214/looptor-1.7b'
+model_link: 'https://huggingface.co/Daimx1214/looptor-1.7b'
+quantization: 'GGUF Q4_K_M'
+runtime: 'Ollama (100% local, works offline)'
+hardware_tested: 'Ollama on CPU: AMD EPYC shared cloud VM, ~1.5 vCPU, 7 GB RAM (GGUF Q4_K_M, ~4 tok/s); trained on free Kaggle T4 GPU'
+demo_video: 'https://www.youtube.com/watch?v=PR28WXYgqDA'
+repo_link: 'https://github.com/Daimx1214/looptor'
+before_after:
+  prompt: 'Ahmed is taller than Omar. Omar is taller than Fatima. Who is the shortest of the three? Explain the chain of comparisons carefully.'
+  base_output: |-
+    [thinking] Okay, let's see. The problem says Ahmed is taller than Omar, and Omar is taller than Fatima. So, we need to figure out who is the shortest among the three... the order from tallest to shortest would be Ahmed, Omar, Fatima... [the same chain is then re-derived four more times in the thinking: transitive-relationship check, trick check, ambiguity check; the frozen loop detector flags repeated 8-grams] ...Therefore, the or[der...] (665 tokens; full output: project repo results/pair-test-017/base.json)
+  finetuned_output: |-
+    [thinking: one pass, no repeats] To determine who is the shortest among Ahmed, Omar, and Fatima, we start with the given comparisons:
+    
+    1. **Ahmed > Omar**  
+    2. **Omar > Fatima**
+    
+    These comparisons form a chain of inequalities:
+    
+    $$
+    \text{Ahmed} > \text{Omar} > \text{Fatima}
+    $$
+    
+    This chain clearly shows the order of their heights from tallest to shortest:
+    
+    - **Tallest**: Ahmed  
+    - **Middle**: Omar  
+    - **Shortest**: Fatima
+    
+    ---
+    
+    ### Final Answer:
+    
+    **Fatima** is the shortest of the three. (583 tokens; full output: project repo results/pair-test-017/tuned.json)
