@@ -5,7 +5,7 @@ members:
 - name: Muhammad Qasim Ali
   github: Qasimali20
 one_liner: A fine-tuned Qwen3-1.7B that stops AI agents from obeying instructions hidden in documents. Runs on a laptop.
-base_model: Qwen/Qwen3-1.7B
+base_model: Qwen/Qwen3-1.7B, revision 70d244cc86ccca08cf5af4e1e306ecf908b1ad5e
 training_tool: other
 training_platform: local-nvidia
 method: lora
@@ -19,7 +19,8 @@ dataset:
 model_link: https://huggingface.co/qasim-tmc/qwen-shield-1.7b
 quantization: GGUF Q4_K_M; F16 GGUF and the LoRA adapter also published
 runtime: ollama
-hardware_tested: HP EliteBook 840 G8 (Intel Core i5-1135G7, 16 GB RAM, CPU only, Ubuntu); a single-GPU workstation for training
+hardware_tested: HP EliteBook 840 G8 (Intel Core i5-1135G7, 16 GB RAM, CPU only, Ubuntu) for inference; training on one NVIDIA
+  GPU (single-GPU workstation, 9 GB peak GPU memory, 44 minutes)
 demo_video: ''
 repo_link: https://github.com/Qasimali20/Qwen-Shield
 before_after:

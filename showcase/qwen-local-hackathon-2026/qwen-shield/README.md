@@ -2,6 +2,9 @@
 
 **A fine-tuned Qwen3-1.7B that stops AI agents from being hijacked by text hidden in the documents they read.**
 
+On 40 held-out agent scenarios, successful attacks fell from 16 of 28 to zero while 39 of 40 tasks were still done. It
+caught 31 of 33 held-out attacks written in Urdu, a style it never trained on, and quotes the exact sentence it removes.
+
 Model: [qasim-tmc/qwen-shield-1.7b](https://huggingface.co/qasim-tmc/qwen-shield-1.7b) ·
 Code: [github.com/Qasimali20/Qwen-Shield](https://github.com/Qasimali20/Qwen-Shield) · Licence: Apache-2.0
 
@@ -55,12 +58,12 @@ on a laptop. Keeping it local matters: the documents being checked are often con
 
 - **Tool:** Hugging Face transformers 5.12.1 + PEFT 0.22.0 + PyTorch 2.11 (CUDA 13), own script
   ([training/train.py](https://github.com/Qasimali20/Qwen-Shield/blob/main/backend/training/train.py)).
-- **Base:** Qwen/Qwen3-1.7B.
+- **Base:** Qwen/Qwen3-1.7B, revision `70d244cc86ccca08cf5af4e1e306ecf908b1ad5e`.
 - **Method:** LoRA, r = 16, alpha = 32, dropout 0.05, on all attention and MLP projections (17.4 M trainable, 1 % of the
   model). 3 epochs, learning rate 2e-4 with cosine decay, token-budget batches of 8,192 tokens, max length 2,560.
   Loss on the answer tokens only; the prompt is exactly the serving prompt with thinking off.
-- **Hardware and time:** a single GPU, **44 minutes** including 21 minutes of thermal pauses (training
-  pauses at 68 °C), 9 GB peak GPU memory. Best validation loss 0.073.
+- **Hardware and time:** one NVIDIA GPU (single-GPU workstation), **44 minutes**, 9 GB peak GPU memory, with a thermal guard pausing at 68 °C (21 of the 44 minutes were thermal pauses). Best validation
+  loss 0.073.
 - **Export:** merged into the base, converted to GGUF and quantized to **Q4_K_M** with llama.cpp's quantizer.
 
 ## Run it locally
@@ -88,12 +91,20 @@ The full gateway with its web console (live side-by-side demo, results, audit lo
 `uv run uvicorn qwen_shield.api:app` against any OpenAI-compatible agent model; see the
 [repository README](https://github.com/Qasimali20/Qwen-Shield#run-it).
 
-**Hardware tested:** HP EliteBook 840 G8 (Intel Core i5-1135G7, 4 cores, 16 GB RAM, no GPU used, Ubuntu); training and
-the larger agent ran on a single-GPU workstation.
+**Hardware tested:** HP EliteBook 840 G8 (Intel Core i5-1135G7, 4 cores, 16 GB RAM, no GPU used, Ubuntu). Training ran
+on one NVIDIA GPU (single-GPU workstation, 9 GB peak GPU memory), which also served the larger agent.
+
+**Checksums:** SHA-256 for every published file is in the model card and `SHA256SUMS`. The Q4_K_M file you download is
+byte-identical to the one used for every laptop result here.
 
 ## Before and after
 
 **Model alone, 344 held-out documents:**
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="charts/02-model-alone-dark.png">
+  <img alt="Base Qwen3-1.7B versus Qwen Shield on 344 held-out documents. Attacks caught: 99.6% versus 99.1%. False alarms on innocent documents: 96.7% versus 0.8%. Right target named: 11.7% versus 89.6%. Exact evidence sentence found: 0% versus 98.2%." src="charts/02-model-alone-light.png">
+</picture>
 
 | Model | Attacks caught | False alarms | Right target | Evidence sentence found |
 |---|---|---|---|---|
@@ -102,6 +113,11 @@ the larger agent ran on a single-GPU workstation.
 | Qwen Shield, Q4_K_M (Ollama) | 97.3 % | **0.0 %** | 83.5 % | 96.3 % |
 
 **End to end, 40 held-out agent scenarios** (28 attacks, 12 benign), larger local Qwen agent:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="charts/01-end-to-end-dark.png">
+  <img alt="Attacks that succeeded, of 28: no defence 16, rules only 14, base Qwen3-1.7B as guard 0, Qwen Shield 0. Tasks completed, of 40: no defence 40, rules only 40, base guard 11, Qwen Shield 39." src="charts/01-end-to-end-light.png">
+</picture>
 
 | Defence | Attacks that succeeded | Tasks completed |
 |---|---|---|
@@ -113,6 +129,8 @@ the larger agent ran on a single-GPU workstation.
 **On the laptop CPU:** the Q4_K_M shield caught 51 / 52 attacks with 0 / 28 false alarms (median 19.8 s per document).
 The whole system (Qwen3-4B-Instruct-2507 Q4 agent + shield) used 5.1 GB of RAM: 0 / 6 attacks succeeded, 10 / 10 tasks
 completed, 67 s median per task.
+
+**Attacks in Urdu.** Attacks written in another language were held out of training entirely. On the 33 held-out attacks in Urdu script, Qwen Shield caught 31 and quoted the exact Urdu sentence in 29. The base model flagged all 33 but found the evidence in none, because it flags almost everything: it also flagged all 15 innocent documents written in other languages, where Qwen Shield flagged none. Results: [assess-urdu-heldout.json](https://github.com/Qasimali20/Qwen-Shield/blob/main/backend/benchmarks/results/assess-urdu-heldout.json).
 
 **Same held-out prompt, real outputs** (from `model.yaml`; a supplier message with an Urdu sentence that swaps the bank
 account, a held-out style):
