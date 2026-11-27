@@ -1,0 +1,25 @@
+project_name: Munshi
+slug: munshi
+event: qwen-local-hackathon-2026
+members:
+  - name: Muhammad Wadeed Khan
+    github: wadeedkhan1
+one_liner: Offline bookkeeping for Pakistani shops - fine-tuned Qwen3 1.7B turns Roman-Urdu notes into ledger entries
+base_model: Qwen/Qwen3-1.7B
+training_tool: unsloth   # finetune-anywhere paths/nvidia-gpu/train_unsloth.py
+training_platform: local-nvidia   # RTX 5060 8 GB, WSL2
+method: qlora   # rank 16, alpha 32, 3 epochs
+dataset:
+  description: Synthetic Roman-Urdu shop messages (udhaar, payment, sale, purchase, expense) to JSON ledger entries, chat format. 1500 train / 150 valid / 150 eval with held-out names, items and phrasings, plus 50 hand-written real eval messages.
+  size: 1500
+  link: https://github.com/wadeedkhan1/munshi/tree/master/data
+model_link: https://huggingface.co/wadeedkhan1/munshi-qwen3-1.7b-gguf
+quantization: Q4_K_M (GGUF)
+runtime: ollama
+hardware_tested: NVIDIA RTX 5060 (8 GB), Ollama 0.40.18, Q4_K_M
+demo_video: https://www.linkedin.com/posts/wadeedkhan_qwenlocalhackathon-qwen-finetuning-ugcPost-7532132908493541376-olv7/
+repo_link: https://github.com/wadeedkhan1/munshi
+before_after:
+  prompt: "Mumtaz se 2000 mil gaye"  # held-out, from data/real_eval.jsonl; outputs from results_*_real_eval.jsonl
+  base_output: '{"type": "sale", "party": "Mumtaz", "item": "2000", "qty": 2000, "unit": "mil", "amount": 2000}'
+  finetuned_output: '{"type": "payment", "party": "Mumtaz", "item": null, "qty": null, "unit": null, "amount": 2000}'
