@@ -1,0 +1,39 @@
+# Entrada Qwen Local Hackathon 2026.
+project_name: 'Extractor de pendientes de notas de turno'
+slug: 'linder-lopez'
+event: 'qwen-local-hackathon-2026'
+members:
+- name: 'Linder Lopez'
+  github: 'Linder-debug'
+one_liner: 'Extrae trabajos de mantenimiento de notas de turno en español como JSON estructurado.'
+base_model: 'Qwen/Qwen3-1.7B'
+training_tool: 'unsloth 2026.11.12 (LoRA r16, alpha 32)'
+training_platform: 'Google Colab gratuito (Tesla T4)'
+method: 'Fine-tune LoRA, 3 epocas, lr 2e-4, semilla 42, seq 1024, batch 1 x acum 4'
+dataset:
+  description: '88 notas de turno de mantenimiento sinteticas, originales de este proyecto (paquete Bloque 2, con manifiesto SHA-256), 40 train / 12 valid / 36 eval held-out. No provienen del starter: su receta json-extractor es otra tarea (60 casos de compras). Licencia de los datos: CC-BY-4.0 (ver LICENSE-DATOS.txt)'
+  size: 88
+  link: 'https://github.com/Linder-debug/relevo-mantenimiento-qwen3/tree/main/data (manifiesto SHA256SUMS en la raiz)'
+model_link: 'https://github.com/Linder-debug/relevo-mantenimiento-qwen3/releases/tag/v1.0 (GGUF Q4_K_M, 1,1 GB)'
+quantization: 'GGUF Q4_K_M (1,1 GB) via convert_hf_to_gguf.py + llama-quantize'
+runtime: 'transformers 4.57.6 (evaluacion HF) y llama.cpp b12728 llama-server (local)'
+hardware_tested: 'Colab Tesla T4 15 GB; laptop Windows i9-13900H, 16 GB RAM, solo CPU'
+demo_video: 'https://www.linkedin.com/feed/update/urn:li:activity:7532073246150561792/'
+repo_link: 'https://github.com/Linder-debug/relevo-mantenimiento-qwen3'
+before_after:
+  prompt: |
+    Para el próximo relevo, seguir con la revisión exterior de Bomba Grunel-53.
+  base_output: |
+    {
+      "registros": [
+        {
+          "equipo": "Bomba Grunel-53",
+          "pendiente": true,
+          "estado": "abierto",
+          "cita": "Para el próximo relevo, seguir con la revisión exterior de Bomba Grunel-53",
+          "plazo": "null"
+        }
+      ]
+    }
+  finetuned_output: |
+    {"registros": [{"equipo": "Bomba Grunel-53", "pendiente": "revisión exterior", "estado": "abierto", "cita": "Para el próximo relevo, seguir con la revisión exterior de Bomba Grunel-53.", "plazo": null}]}
