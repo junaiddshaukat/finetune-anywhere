@@ -1,0 +1,36 @@
+# Submission form for the Qwen Local Hackathon 2026 entry.
+# Every value below is measured or factual; see README.md for the evidence behind each one.
+project_name: Roman Urdu tailor work-order compiler
+slug: roman-urdu-tailor-workorder
+event: qwen-local-hackathon-2026
+members:
+- name: Rehan Abrar
+  github: Rehan-Abrar
+one_liner: Turns spoken Roman Urdu alteration instructions into strict, cuttable JSON work orders.
+base_model: Qwen/Qwen3-1.7B
+training_tool: other
+training_platform: colab
+method: qlora
+dataset:
+  description: >-
+    345 author-written Roman Urdu alteration instructions: 245 training, 40 development,
+    30 in-distribution and 30 out-of-distribution evaluation. No public dataset, no scraping,
+    no customer records. Every label was validated against the JSON schema (0 errors) and the
+    splits were audited for near-duplicates (none above 0.9 similarity). Both evaluation sets
+    were SHA-256 frozen before the training set existed, so they could not be tuned against.
+  size: 245
+  link: ''
+model_link: https://huggingface.co/rehanabrar777/qwen3-1.7b-roman-urdu-tailor-workorder
+quantization: Q4_K_M GGUF, GGUF v3, 28 blocks
+runtime: ollama
+hardware_tested: >-
+  RTX 3050 Laptop 6 GB VRAM, i5-13420H, 16 GB RAM, Windows, Ollama 0.40.14.
+  Trained on a free Colab T4.
+repo_link: ''
+before_after:
+  prompt: Shalwar ka pait dhaai inch kam karein.
+  base_output: '{"jobs": [], "cancelled_parts": [], "needs_clarification": false}'
+  finetuned_output: >-
+    {"jobs": [{"part": "waist", "action": "tighten", "amount_inches": 2.5}],
+    "cancelled_parts": [], "needs_clarification": false}
+demo_video: 'https://www.youtube.com/watch?v=9Dw9OVxR4P0'
