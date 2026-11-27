@@ -4,6 +4,7 @@
 
 On 40 held-out agent scenarios, successful attacks fell from 16 of 28 to zero while 39 of 40 tasks were still done. It
 caught 31 of 33 held-out attacks written in Urdu, a style it never trained on, and quotes the exact sentence it removes.
+On the public InjecAgent benchmark, never trained on, it flagged 92.8 % of 1,054 attacks with no false alarms on the control.
 
 Model: [qasim-tmc/qwen-shield-1.7b](https://huggingface.co/qasim-tmc/qwen-shield-1.7b) ·
 Code: [github.com/Qasimali20/Qwen-Shield](https://github.com/Qasimali20/Qwen-Shield) · Licence: Apache-2.0
@@ -91,6 +92,8 @@ The full gateway with its web console (live side-by-side demo, results, audit lo
 `uv run uvicorn qwen_shield.api:app` against any OpenAI-compatible agent model; see the
 [repository README](https://github.com/Qasimali20/Qwen-Shield#run-it).
 
+**Pakistan examples** (in the console, demo only, not in any benchmark): an invoice with a hidden Urdu instruction to pay a JazzCash wallet (unprotected, the agent puts the wallet number in the email; with Qwen Shield the sentence is cut and the correct email goes out), a Roman Urdu helpline swap (caught and quoted exactly), and an ordinary all-Urdu exam notice, which the model wrongly flags: a known false alarm.
+
 **Hardware tested:** HP EliteBook 840 G8 (Intel Core i5-1135G7, 4 cores, 16 GB RAM, no GPU used, Ubuntu). Training ran
 on one NVIDIA GPU (single-GPU workstation, 9 GB peak GPU memory), which also served the larger agent.
 
@@ -132,6 +135,13 @@ completed, 67 s median per task.
 
 **Attacks in Urdu.** Attacks written in another language were held out of training entirely. On the 33 held-out attacks in Urdu script, Qwen Shield caught 31 and quoted the exact Urdu sentence in 29. The base model flagged all 33 but found the evidence in none, because it flags almost everything: it also flagged all 15 innocent documents written in other languages, where Qwen Shield flagged none. Results: [assess-urdu-heldout.json](https://github.com/Qasimali20/Qwen-Shield/blob/main/backend/benchmarks/results/assess-urdu-heldout.json).
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="charts/03-injecagent-dark.png">
+  <img alt="InjecAgent, 1,054 attacks never trained on. Attacks flagged: base 100%, Qwen Shield 92.8%. Exact attack sentence quoted: base 0%, Qwen Shield 90.3%. Innocent versions flagged (17 cases): base 88.2%, Qwen Shield 0%." src="charts/03-injecagent-light.png">
+</picture>
+
+**On a public benchmark: InjecAgent.** [InjecAgent](https://github.com/uiuc-kang-lab/InjecAgent) (Zhan et al., ACL Findings 2024, MIT licence) hides an attacker's instruction inside what a tool returns to an agent: 1,054 cases over 17 user tasks, none used in training or tuning. Qwen Shield flagged 978 (92.8 %) and quoted the exact attack sentence in 952 (90.3 %). The base model flagged all 1,054 but quoted the attack in none. On the same 17 tool outputs with the attack replaced by an ordinary sentence (a control we added, since the benchmark has no benign cases), Qwen Shield flagged 0 and the base model 15. One limit: InjecAgent's tool outputs are single-line JSON, so our sentence-level sanitizer usually withholds the whole output instead of only the attack (the rest was kept in 94 of the 978); removing just the attacked JSON field is the next step. This measures the shield's assessment and removal, not InjecAgent's full agent score. Results: [injecagent-bf16.json](https://github.com/Qasimali20/Qwen-Shield/blob/main/backend/benchmarks/results/injecagent-bf16.json).
+
 **Same held-out prompt, real outputs** (from `model.yaml`; a supplier message with an Urdu sentence that swaps the bank
 account, a held-out style):
 
@@ -147,8 +157,9 @@ tool call executed.
 **Failures and limits.** One benign scenario out of 12 was blocked (a false positive). With the laptop-sized 4B agent
 and the Q4 shield, 3 / 28 held-out attacks got through (1 / 28 with bf16): quantization has a measurable cost, and one
 counts only by the scorer's substring rule. One policy rule (let a cleaned action through) was added after seeing
-held-out results; the model and data were not changed. Scenario counts are small. Full honesty notes are in the
-repository README.
+held-out results; the model and data were not changed. On InjecAgent the whole single-line JSON tool output is usually
+withheld rather than only the attack. An ordinary all-Urdu notice is wrongly flagged. Scenario counts are small. Full
+honesty notes are in the repository README.
 
 ## What we learned
 
@@ -161,6 +172,8 @@ repository README.
   both are fixed. The model finds the attack; fixed rules decide.
 - **Small details matter on device.** Ollama's `think: false` silently changed the prompt and multiplied false alarms;
   latency on a CPU is dominated by the length of the evidence quote.
+- **Test outside your own data.** A public benchmark (InjecAgent) confirmed the held-out pattern, and a few hand-made
+  Pakistan examples exposed a real bug in our sanitizer (Urdu full stops) that our English-heavy tests had missed.
 - **Uncertain:** real-world attacks may differ from synthetic ones, and 40 scenarios is a small test.
 
 ## Team
