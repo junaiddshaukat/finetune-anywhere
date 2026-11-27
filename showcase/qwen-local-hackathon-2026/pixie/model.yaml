@@ -1,0 +1,52 @@
+project_name: Urdish Support Agent
+slug: pixie
+event: qwen-local-hackathon-2026
+members:
+- name: Nauman0x
+  github: Nauman0x
+- name: Esha Saeed
+  github: eshasaeed038
+- name: Khadija Masood
+  github: khadijamasud
+one_liner: 'Qwen3 support agent for any small business: answers in Roman Urdu, Urdu or English from its policy card'
+base_model: 'Qwen/Qwen3-4B (lighter option: Qwen/Qwen3-1.7B)'
+training_tool: unsloth
+training_platform: local-nvidia
+method: qlora
+dataset:
+  description: Synthetic WhatsApp-style support chats for 23 fictional Pakistani businesses (policy card + customer message + reply + JSON tag), drafted with Claude, validated by script and spot-checked by the team. Train 482 / validation 40 / held-out test 60 from 3 business types never seen in training. MIT.
+  size: 582
+  link: https://github.com/Nauman0x/urdish-support-qwen/tree/main/data
+model_link: https://huggingface.co/Nauman0x/Urdish-Support-Qwen3-4B
+quantization: GGUF Q4_K_M and Q8_0
+runtime: llama.cpp
+hardware_tested: 'Trained on RTX 5070 12 GB (2-4 min per run). Inference CPU only: Ryzen 7 7800X3D, 4 and 8 threads, no GPU'
+demo_video: https://x.com/naumanarif_/status/2126375353950392468
+repo_link: https://github.com/Nauman0x/urdish-support-qwen
+before_after:
+  prompt: 'POLICY:
+
+    Business: Shifa Pharmacy Online (medicine delivery, Lahore)
+
+    - Prescription medicines need a clear photo of a valid prescription before dispatch.
+
+    - We do not suggest medicines or doses; please ask your doctor.
+
+    - Delivery in Lahore within 24 hours, Rs 150. Free above Rs 3,000.
+
+    - Payment: COD and card.
+
+    - Medicines cannot be returned once delivered, except wrong or damaged items reported within 24 hours.
+
+    - Cold-chain items (insulin, vaccines) are delivered in an ice box; same-day delivery only.
+
+    - Hours: daily 9am-11pm.
+
+
+    CUSTOMER:
+
+    bhai apki site pe parha tha 2000 se upar delivery free hai, mera order 2500 ka hai to Rs 150 q laga rahe ho??'
+  base_output: "Yes, your order is above 2000, so delivery should be free. However, since your order is 2500, we will charge Rs 150 for delivery.  \nTAG: {\"intent\": \"payment\", \"order_id\": \"2500\", \"handoff\": false}"
+  finetuned_output: 'Maazrat, delivery Rs 150 ke saath hoti hai, aur Rs 3,000 se upar ke orders par delivery free hoti hai. Aap ke order 2500 ka hai, is liye delivery Rs 150 ke saath hoti hai.
+
+    TAG: {"intent": "delivery", "order_id": null, "handoff": false}'
