@@ -1,0 +1,31 @@
+project_name: 'apkscan-local'
+slug: 'apkscan-local'
+event: 'qwen-local-hackathon-2026'
+members:
+- github: 'iabdullah215'
+one_liner: 'Offline Android APK vulnerability triage with a fine-tuned Qwen2.5-Coder-1.5B'
+base_model: 'Qwen/Qwen2.5-Coder-1.5B-Instruct, revision 2e1fd397, Apache-2.0'
+training_tool: 'mlx'
+training_platform: 'apple-silicon'
+method: 'lora'
+dataset:
+  description: '1444 verifier examples (685 real findings, 759 false alarms) labelled from deliberately vulnerable open-source training apps (DIVA, allsafe, InjuredAndroid, 24 OWASP MASTG demos) and a rule-checked synthetic generator, plus 141 held for validation. The two test apps were never used in training; a unit test checks that no test-app text appears in the training data.'
+  size: 1444
+  link: ''
+model_link: 'https://huggingface.co/hwatsauce/apkscan-local'
+quantization: 'GGUF Q8_0 (1.6 GB, CLI default and used in the video) and Q4_K_M (1.0 GB)'
+runtime: 'llama.cpp'
+hardware_tested: 'Apple M4 (4 performance and 6 efficiency cores), 16 GB unified memory, macOS 27.2.1'
+demo_video: 'https://www.youtube.com/watch?v=BUchPPf7S3A'
+repo_link: 'https://github.com/iabdullah215/apkscan-local'
+before_after:
+  prompt: 'Held-out candidate from InsecureBankv2, TrackUserContentProvider.java line 78, which passes the caller projection, selection and sortOrder straight into SQLiteQueryBuilder.query. The scanner asks the model to decide whether the candidate is a real vulnerability and to return strict JSON.'
+  base_output: |-
+    ```json
+    {
+      "real": false
+    }
+    ```
+    Wrapped in a Markdown fence, so it never parses as strict JSON. The base model answered {"real": false} for every one of the 129 candidates across both test apps.
+
+  finetuned_output: '{"real": true, "severity": "high", "cwe": "CWE-89", "evidence": "caller projection, selection and sortOrder passed to SQLiteQueryBuilder.query without setStrict or a projection map", "why_exploitable": "A calling app controls part of the SQL, so it can read rows or tables beyond user data (for example with UNION SELECT or a subquery in the selection).", "fix": "Use parameterized selections with selectionArgs, a fixed projection map, qb.setStrict(true) and setStrictColumns, and require a permission on the provider."}'
