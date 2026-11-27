@@ -22,7 +22,7 @@ quantization: 'Q4_K_M GGUF, 380 MB (373.71 MiB, 6.3455 BPW), general.file_type 1
 runtime: 'ollama 0.40.18 — 100% GPU, 936 MB loaded with a 32k context, ~50–100 tok/s; llama.cpp used for the export'
 hardware_tested: 'ASUS laptop — RTX 4060 Laptop GPU 8 GB, Ryzen 7 8845HS, 16 GB RAM; Qwen2.5-0.5B LoRA trains in ~27 min, inference 100% on GPU via Ollama'
 demo_video: 'TODO — public LinkedIn/X post tagging M Junaid and Qwen Pakistan with #QwenLocalHackathon'
-repo_link: 'https://huggingface.co/abdul1977ghaffar/karachi-bus-query-parser'
+repo_link: 'https://github.com/Muhammad-waqar-uit/karachi-bus-query-parser'
 before_after:
   prompt: 'bhai mahtab cniema jaana hai, abhi first chowrangi mein khara hoon'
   base_output: '{"start_stop": "Chowrangi", "destination_stop": "Bhuj"}'
