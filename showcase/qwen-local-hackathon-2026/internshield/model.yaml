@@ -1,0 +1,31 @@
+project_name: InternShield
+slug: internshield
+event: qwen-local-hackathon-2026
+one_liner: Detect fake internship ads targeting Pakistani university students using a local Qwen3 model
+base_model: Qwen3-0.6B
+runtime: ollama
+hardware_tested: Intel i7-8650U, 16GB RAM, CPU-only (no GPU acceleration)
+repo_link: https://github.com/abdul15x
+
+members:
+  - name: Abdul
+    github: abdul15x
+
+training_tool: none
+training_platform: none
+method: none
+
+dataset:
+  description: none
+  size: 0
+  link: ""
+
+model_link: ""
+quantization: Q4_K_M
+
+demo_video: ""
+
+before_after:
+  prompt: ""
+  base_output: ""
+  finetuned_output: ""
