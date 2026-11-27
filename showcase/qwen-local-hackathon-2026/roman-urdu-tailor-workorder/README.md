@@ -51,6 +51,8 @@ On a 40-example development split (used only during development) the same adapte
 5/5 in each of the eight behaviour families. Earlier runs of this recipe scored 38/40, so the
 honest band is 38-40; 40/40 is the top of it, not a generalisation claim.
 
+On a separate post-development, web-informed 32-case stress test, the unmodified Qwen3 1.7B scored 7/32 (21.9%) versus 22/32 (68.8%) for our shipped Q4_K_M model. Fine-tuning corrected 15 previously wrong cases without regressing any previously correct scored cases. However, unsupported alteration concepts can be force-mapped, and explicit negation remains a safety-relevant failure.
+
 ## Before and after
 
 A real held-out pair, both outputs verbatim:
