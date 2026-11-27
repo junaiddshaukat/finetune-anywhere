@@ -1,24 +1,29 @@
 project_name: InternShield
 slug: internshield
 event: qwen-local-hackathon-2026
-one_liner: Detect fake internship ads targeting Pakistani university students using a local Qwen3 model
-base_model: Qwen3-0.6B
+one_liner: Fine-tuned Qwen3-0.6B to detect fake internship ads targeting Pakistani university students — verdict accuracy improved from 9.1% to 57.1%
+base_model: Qwen/Qwen3-0.6B
 runtime: ollama
-hardware_tested: Intel i7-8650U, 16GB RAM, CPU-only (no GPU acceleration)
+hardware_tested: Google Colab T4 GPU (training); Intel i7-8650U 16GB RAM CPU-only (inference)
 repo_link: https://github.com/abdul15x
 
 members:
   - name: Abdul
     github: abdul15x
 
-training_tool: none
-training_platform: none
-method: none
+training_tool: unsloth
+training_platform: google-colab
+method: lora
 
 dataset:
-  description: none
-  size: 0
-  link: ""
+  description: >
+    Three public HuggingFace datasets merged and normalised: agnialf/Internship-Job-Scam-Dataset
+    (719 internship-related rows), victor/real-or-fake-fake-jobposting-prediction (199 rows),
+    plus 35 handcrafted Pakistan-specific synthetic examples covering local scam patterns
+    (upfront fees, CNIC demands, Gmail-only contact, government impersonation, Easypaisa scams).
+    Split 80/10/10 train/valid/eval.
+  size: 953
+  link: "https://huggingface.co/datasets/agnialf/Internship-Job-Scam-Dataset"
 
 model_link: ""
 quantization: Q4_K_M
@@ -26,6 +31,6 @@ quantization: Q4_K_M
 demo_video: ""
 
 before_after:
-  prompt: ""
-  base_output: ""
-  finetuned_output: ""
+  prompt: "URGENT! Digital Marketing Hub Karachi. Salary Rs 60,000/month, no experience needed. Send CV + Rs 2,000 registration fee to xyz@gmail.com"
+  base_output: '{"verdict": "Genuine", "red_flags": [], "green_signals": [], "verify_steps": ["Check if the company is listed in the SECP registry"]}'
+  finetuned_output: '{"verdict": "LIKELY_SCAM", "red_flags": ["upfront registration fee", "Gmail-only contact", "unrealistic salary for no-experience role"], "green_signals": [], "verify_steps": ["Never pay registration fees — legitimate companies do not charge to hire", "Search the company on SECP registry (search.secp.gov.pk)", "Check on Rozee.pk for official listing"], "summary": "This ad shows multiple classic Pakistani internship scam patterns — do not pay or share personal documents."}'
