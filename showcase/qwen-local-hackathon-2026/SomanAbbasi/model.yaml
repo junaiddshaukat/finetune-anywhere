@@ -1,0 +1,36 @@
+project_name: "PK-RestoQwen3-4B"
+slug: "pk-restoqwen3-4b"
+event: "qwen-local-hackathon-2026"
+
+members:
+  - name: "Soman Abbasi"
+    github: "https://github.com/SomanAbbasi"
+  - name: "Ali Haider"
+    github: "https://github.com/AliHaiderno2"
+
+one_liner: "A locally runnable Pakistani restaurant customer-support model fine-tuned for English, Roman Urdu, Urdu, and Urdu-English conversations."
+
+base_model: "Qwen/Qwen3-4B-Instruct-2507"
+training_tool: "Hugging Face Transformers and PEFT"
+training_platform: "Google Colab"
+method: "LoRA"
+
+dataset:
+  description: "Approximately 1,500 curated restaurant customer-support examples covering English, Roman Urdu, Urdu script, and Urdu-English conversations."
+  size: 1500
+  link: ""
+
+model_link: "https://huggingface.co/AliHaider1/PK-RestoQwen3-4B"
+quantization: "Q4_K_M GGUF base model with separately converted GGUF LoRA adapter"
+runtime: "llama.cpp llama-server"
+hardware_tested: "Local CPU inference on Intel Core i7-1355U laptop with 8 GB RAM; training on Google Colab NVIDIA Tesla T4."
+
+demo_video: ""
+repo_link: "https://github.com/SomanAbbasi/finetune-anywhere"
+
+before_after:
+  prompt: "Yaar, mera food abhi tak deliver nahi hua. App pe showing delivered hai but mujhe mila hi nahi. Please check karo."
+  base_output: |
+    Yaar, main kisi bhi order ke record ko dekha nahi sakta, lekin agar aapne order number ya delivery time diya hai toh main uska status check karne ke liye help kar sakta hoon. Lekin main kisi bhi order ko cancel ya update nahi kar sakta. Aapne order number ya delivery time bataiye toh main aapko confirm karne ke liye help kar sakta hoon. 😊
+  finetuned_output: |
+    Sorry ke liye kitchen aur delivery status check karna main nahi kar sakta. Apna order number share kar dein taake hum verify kar saken.
