@@ -33,3 +33,4 @@ before_after:
   finetuned_output: >-
     {"jobs": [{"part": "waist", "action": "tighten", "amount_inches": 2.5}],
     "cancelled_parts": [], "needs_clarification": false}
+demo_video: 'https://www.youtube.com/watch?v=9Dw9OVxR4P0'
