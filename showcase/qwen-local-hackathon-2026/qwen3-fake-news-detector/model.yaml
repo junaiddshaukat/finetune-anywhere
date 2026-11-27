@@ -1,0 +1,36 @@
+project_name: Qwen3 Fake News Detector
+slug: qwen3-fake-news-detector
+event: qwen-local-hackathon-2026
+members:
+- name: Muhammad Faisal Zahoor
+  github: faisalzahoor1
+one_liner: Qwen3-1.7B LoRA that labels English news articles REAL or FAKE, trained and run on a MacBook Air M2
+base_model: mlx-community/Qwen3-1.7B-4bit (Qwen/Qwen3-1.7B, 4-bit MLX)
+training_tool: mlx
+training_platform: apple-silicon
+method: qlora
+dataset:
+  description: >-
+    Balanced 50/50 sample of GonzaloA/fake_news (English news, mostly US politics
+    2016-2017; label 1 = real, 0 = fake). 1,000 train / 100 validation / 200 held-out
+    test, drawn from the dataset's own train/validation/test splits. The leading
+    "CITY (Reuters) -" byline was stripped so the model cannot just detect "Reuters".
+    Articles truncated to 1,500 characters and formatted as system/user/assistant chat.
+  size: 1300
+  link: https://huggingface.co/datasets/GonzaloA/fake_news
+model_link: https://huggingface.co/faisal-001/qwen3-1.7b-fakenews-mlx
+quantization: 4-bit MLX (group size 64), LoRA fused into the 4-bit base
+runtime: mlx
+hardware_tested: MacBook Air M2, YOUR_RAM GB unified memory, macOS, mlx 0.32.5, mlx-lm 0.32.2
+# Hackathon entries: link your public LinkedIn or X demo post that tags
+# M Junaid and Qwen Pakistan and uses #QwenLocalHackathon.
+demo_video: https://YOUR-LINKEDIN-OR-X-POST-LINK
+repo_link: ''
+before_after:
+  prompt: |-
+    System: You are a fake news detector. Read the news article and answer with exactly one word: REAL or FAKE.
+    User: Title: U.S. approves possible $15 billion sale of THAAD missiles to Saudi Arabia
+
+    The U.S. State Department has approved the possible sale of a THAAD anti-missile defense system to Saudi Arabia at an estimated cost of $15 billion, the Pentagon said on Friday, citing Iran among regional threats. The approval opens the way for Saudi Arabia to purchase 44 Terminal High Altitude Area Defense (THAAD) launchers and 360 missiles, as well as fire control stations and radars. This sale furthers U.S. national security and foreign policy interests, and supports the long-term security of Saudi Arabia and the Gulf region in the face of Iranian and other regional threats, the Pentagon s Defense Security Cooperation agency said in a statement. Saudi Arabia and the United States are highly critical of what they consider Iran s aggressive behavior in the Middle East. Iran also has one of the biggest ballistic missile programs in the Middle East, viewing it as an essential precautionary defense against the United States and other adversaries, primarily Gulf Arab states and Israel. THAAD missile systems are deployed to defend against ballistic missile attacks. Saudi-owned al Arabiya television reported on Thursday that the kingdom had agreed to buy Russian S-400 surface-to-air missile systems, an announcement that came as Saudi King Salman made during his visit to Russia, the first by a Saudi monarch. U.S. military sales to Saudi Arabia have come under increased scrutiny over the Saudi-led coalition s war in Yemen. Riyadh and its allies have been bombing the Iran-aligned Hou
+  base_output: FAKE
+  finetuned_output: REAL
