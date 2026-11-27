@@ -1,0 +1,28 @@
+project_name: Roman Urdu to Urdu Script
+slug: roman-urdu-to-urdu
+event: qwen-local-hackathon-2026
+members:
+- name: Syeda Narjis Batool
+  github: syeda-batool99
+one_liner: Converts Roman Urdu, as people text it, into proper Urdu script, offline on a laptop.
+base_model: Qwen/Qwen3-0.6B
+training_tool: mlx
+training_platform: apple-silicon
+method: qlora
+dataset:
+  description: >-
+    7,892 Dakshina Urdu Wikipedia sentences (CC BY-SA 4.0) plus 122 everyday texting-style
+    sentences written by the team (repeated 5x). Held out for testing: 300 Dakshina sentences
+    and 60 team-written everyday sentences.
+  size: 8014
+  link: https://huggingface.co/datasets/Anvesh-Lankala/Copy_Dakshina_Google_research_dataset
+model_link: https://huggingface.co/narjisb99/qwen3-0.6b-roman-urdu-to-urdu
+quantization: int4 (Ollama); 4-bit MLX also published
+runtime: ollama
+hardware_tested: MacBook Air, Apple M2, 16 GB unified memory (macOS)
+demo_video: ''
+repo_link: https://huggingface.co/narjisb99/qwen3-0.6b-roman-urdu-to-urdu/tree/main/scripts
+before_after:
+  prompt: ye kaam kaun karay ga?
+  base_output: ye kaam kaun karay ga?
+  finetuned_output: یہ کام کون کرے گا؟
