@@ -1,0 +1,25 @@
+project_name: 'VoiceCode ASR'
+slug: 'voicecode-asr'
+event: 'qwen-local-hackathon-2026'
+members:
+- name: 'Khawaja Afnan Asif'
+  github: 'KhawajaAfnan'
+one_liner: 'Local Qwen3-ASR-1.7B LoRA that writes exact URLs, paths, commands and IDs; beats 21 of 23 cloud ASR systems.'
+base_model: 'Qwen/Qwen3-ASR-1.7B'
+training_tool: other
+training_platform: local-nvidia
+method: lora
+dataset:
+  description: 'About 7,000 synthetic sentences with technical values (Kokoro TTS, many voices), 3,600 LibriSpeech dev clips with base-model transcripts as targets (keeps general accuracy), and 105 real human clips (35 speakers) from sakshee05/alphanumeric-audio-dataset (MIT). VoiceCodeBench used only for testing.'
+  size: 10708
+  link: 'https://huggingface.co/KhawajaAfnan/voicecode-asr/tree/main/code'
+model_link: 'https://huggingface.co/KhawajaAfnan/voicecode-asr'
+quantization: 'GGUF Q8_0 (1.8 GB) and Q4_K_M (1.1 GB), plus mmproj f16 audio encoder (0.6 GB)'
+runtime: transformers
+hardware_tested: 'NVIDIA RTX 4060 Ti 16 GB, Windows 11'
+demo_video: 'https://huggingface.co/KhawajaAfnan/voicecode-asr/blob/main/voicecode_demo.mp4'
+repo_link: 'https://huggingface.co/KhawajaAfnan/voicecode-asr'
+before_after:
+  prompt: 'Audio: "migrations slash 20260506 underscore add underscore claim underscore index dot sql" (VoiceCodeBench clip technical_it_dev_028, held out)'
+  base_output: 'migration/20260506_add_claim_index.sql'
+  finetuned_output: 'migrations/20260506_add_claim_index.sql'
