@@ -17,10 +17,65 @@ A 2B vision model taught one hard job: reading Nastaliq, the joined, sloping scr
   <img alt="Character error rate on 362 held-out items. Ours v3 7.9%, ours v1 11.0%, Tesseract 18.7%, Qaari 0.1 plus our data 21.7%, Qaari 0.1 36.0%, base Qwen3-VL-2B 82.8%." src="charts/cer-overall-light.png">
 </picture>
 
-- **10x fewer character errors than the base model** (82.8% to 7.9%) on the same 362 held-out images.
-- **Beats the existing open Urdu OCR model** (Qaari 0.1: 36.0%) and Tesseract (18.7%).
-- **On real photos never trained on: 4.1% CER**, where Qaari 0.1 loops and scores 217.9%.
-- Ships as a **1.1-1.8 GB GGUF** that reads a handwritten line in about 3 s on a CPU.
+- **Handwriting from writers it never saw:** errors drop from 41% to 8%; wrong words from 77% to 26%.
+- **Printed lines:** 46% to 3%. **News pages:** 86% to 3%. **A book from 1908:** three times fewer errors.
+- **Real book lines (UTRSet-Real, 2,096 lines): 92% accuracy**, within a point of the specialised UTRNet-Large, after an 80-minute final training round.
+- **Beats the existing open Urdu OCR model** (Qaari 0.1) and Tesseract on the same images.
+- Runs on a normal computer, **no GPU, no internet**: about 3 s a line, under a minute a page, from a 1.8 GB GGUF.
+
+## Our best model, v4-NC: the numbers in the demo video
+
+Four LoRA rounds, each continuing the last: **v1** (synthetic lines, news pages, handwriting), **v2** (photo-style re-renders),
+**v3** (second typeface), and **v4-NC**, which adds about 9k real scanned book lines from UTRSet-Real
+(UTRNet, ICDAR 2023) while replaying the older data so nothing is forgotten. The final round took **82 minutes**
+(1 epoch, 556 steps) on one RTX 3090.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="charts/base-vs-v4nc-dark.png">
+  <img alt="Original Qwen3-VL-2B vs v4-NC CER: handwriting 41.5 to 8.2, printed lines 45.8 to 3.0, news pages 86.2 to 3.3, 1908 book 85.7 to 26.6." src="charts/base-vs-v4nc-light.png">
+</picture>
+
+| Test (CER / WER %, lower is better) | Original Qwen3-VL-2B | **v4-NC** |
+|---|---:|---:|
+| Handwriting, unseen writers (200) | 41.5 / 77.1 | **8.2 / 26.5** |
+| Printed Nastaliq lines | 45.8 / 79.0 | **3.0 / 14.4** |
+| News pages | 86.2 / 96.5 | **3.3 / 4.0** |
+| 1908 book scan, never trained on (51) | 85.7 / 114.1 | **26.6 / 65.9** (3.2x fewer errors) |
+| Real book lines, UTRSet-Real test (2,096) | | **8.05 CER = 92.18% accuracy** |
+
+Handwriting and the 1908 book use identical items for both models. For news and printed lines the original ran on
+87 and 24 items and v4-NC on 200 of each, from the same test splits. On the identical 87 news pages, v3 scores 5.7%.
+
+### Against UTRNet, the specialised Urdu OCR network
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="charts/utrnet-dark.png">
+  <img alt="UTRSet-Real character accuracy. Never trained on real scans: ours v3 84.21, UTRNet-Large 80.26, UTRNet-Small 75.14. Trained on UTRSet-Real: UTRNet-Large 92.97, ours v4-NC 92.18, UTRNet-Small 90.87." src="charts/utrnet-light.png">
+</picture>
+
+- **Without real book scans:** our v3 (84.21%) leads both UTRNet models trained on synthetic data (Small 75.14%, Large 80.26%).
+- **With real book lines:** v4-NC (92.18%) beats UTRNet-Small (90.87%) and is within a point of UTRNet-Large (92.97%).
+- UTRNet numbers are from the paper's Table 4 (Rahman, Ghosh & Arora, ICDAR 2023, arXiv 2306.15782); ours use the same
+  character-accuracy formula on the same 2,096 lines. UTRNet trains on UTRSet only; v4-NC also replays our other data.
+
+### Same image, every model
+
+A printed Ghalib couplet photo (16 words), never trained on: کیا تنگ ہم ستم زدگاں کا جہان ہے / جس میں کہ ایک بیضۂ مور آسمان ہے
+
+| Model | Words wrong |
+|---|---:|
+| Qaari 0.1 | 12 of 16 |
+| Qaari 0.1 trained on our data | 5 of 16 |
+| Ours v3 | 3 of 16 |
+| **Ours v4-NC** | **1 of 16** (the two lines come back joined as one) |
+
+### Speed
+
+About **3 s per line and under a minute per page on a CPU** with no GPU (measured, table below). On a phone we
+*estimate* 4 to 9 s per line; we have not benchmarked a phone yet.
+
+**Licence:** UTRSet-Real is CC BY-NC-SA 4.0, so v4-NC is a separate research, non-commercial model (credit the UTRNet
+authors). The published model below is **v3**, trained only on openly licensed data (Apache 2.0 base, MIT/CC BY/OFL data).
 
 ## What it does
 
@@ -84,6 +139,7 @@ All training data is openly licensed. Please credit the sources:
 | [oddadmix Qaari 0.1 news](https://huggingface.co/datasets/oddadmix/qaari-0.1-ocr-urdu-news-dataset-small) | MIT | news pages |
 | [OUHD-L online Urdu handwriting](https://huggingface.co/datasets/saad2002/ouhd-l-online-urdu-nastaliq-handwriting), DOI 10.5281/zenodo.20642162 | **CC BY 4.0** | tablet handwriting (311 writers, split by writer), re-rendered as notebook photos |
 | [Noto Nastaliq Urdu](https://fonts.google.com/noto/specimen/Noto+Nastaliq+Urdu) | SIL OFL 1.1 | second typeface |
+| [UTRSet-Real](https://github.com/abdur75648/UTRNet-High-Resolution-Urdu-Text-Recognition) (UTRNet, ICDAR 2023) | **CC BY-NC-SA 4.0** | v4-NC only: ~9k real scanned book lines; its 2,096-line test split is benchmark only |
 | [1908 book sample](https://huggingface.co/datasets/vettedlance/urdu-nastaliq-1908-eval-sample) | evaluation only | **never trained on**; tests old print |
 
 Baselines: Qaari 0.1 ([oddadmix/Qaari-0.1-Urdu-OCR-VL-2B-Instruct](https://huggingface.co/oddadmix/Qaari-0.1-Urdu-OCR-VL-2B-Instruct)),
