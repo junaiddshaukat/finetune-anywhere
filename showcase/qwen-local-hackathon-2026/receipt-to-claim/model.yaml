@@ -1,0 +1,30 @@
+project_name: Receipt to Claim
+slug: receipt-to-claim
+event: qwen-local-hackathon-2026
+members:
+- name: Muhammad Huzaifa
+  github: Huzaifakamran
+one_liner: Photos of Pakistani medical receipts in, a checked claim sheet out. Qwen3.5-4B reads them on your laptop.
+base_model: qwen3.5:4b (Qwen3.5 4B with vision, Ollama library)
+training_tool: none
+training_platform: none
+method: none
+dataset:
+  description: >-
+    No training. Evaluation only: 12 photos from the author's own medical claims (7 handwritten
+    receipts, 5 prescriptions; private, not published) and the CORD-v2 test split (95 receipts with
+    a printed total, CC-BY-4.0).
+  size: 107
+  link: https://huggingface.co/datasets/naver-clova-ix/cord-v2
+model_link: ''
+quantization: Q4_K_M (Ollama default for qwen3.5:4b)
+runtime: ollama
+hardware_tested: >-
+  Windows 11 laptop, NVIDIA RTX 4070 Laptop GPU 8 GB (model uses 3.4 GB, 100% GPU), 32 GB RAM,
+  Ollama 0.40.18. About 5 s per receipt.
+demo_video: https://www.linkedin.com/posts/huzaifakamran_qwenlocalhackathon-qwenlocalhackathon-qwen-ugcPost-7532242358961262592-RBAg/
+repo_link: https://github.com/Huzaifakamran/receipt-to-claim
+before_after:
+  prompt: ''
+  base_output: ''
+  finetuned_output: ''
