@@ -31,6 +31,12 @@ I fine-tuned Qwen3-1.7B using LoRA to act as a strict Study Assistant. It takes 
 > }
 > ```
 
+
+## Screen Clip of the terminal Output
+<img width="1919" height="1199" alt="image" src="https://github.com/user-attachments/assets/f3d0b907-353b-4ae8-b8b0-ca0adc3123df" />
+
+
+
 ## Hardware & Local Execution
 - **Training:** Google Colab (Free T4 GPU) - Took ~54 seconds.
 - **Local Execution:** Windows 11 CPU using Ollama. Exported to `Q4_K_M` GGUF format.
