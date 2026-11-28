@@ -5,7 +5,8 @@ A 2B vision model taught one hard job: reading Nastaliq, the joined, sloping scr
 
 | | |
 |---|---|
-| **Model** | [OmgItsAmmer/urdu-nastaliq-ocr-qwen3vl-2b-GGUF](https://huggingface.co/OmgItsAmmer/urdu-nastaliq-ocr-qwen3vl-2b-GGUF) (GGUF Q8_0 1.8 GB / Q4_K_M 1.1 GB + LoRA adapter) |
+| **Best model (v4-NC)** | [OmgItsAmmer/urdu-nastaliq-ocr-qwen3vl-2b-v4nc-GGUF](https://huggingface.co/OmgItsAmmer/urdu-nastaliq-ocr-qwen3vl-2b-v4nc-GGUF) (non-commercial, CC BY-NC-SA 4.0; GGUF Q8_0 1.8 GB / Q4_K_M 1.1 GB + LoRA adapter) |
+| **Open model (v3)** | [OmgItsAmmer/urdu-nastaliq-ocr-qwen3vl-2b-GGUF](https://huggingface.co/OmgItsAmmer/urdu-nastaliq-ocr-qwen3vl-2b-GGUF) (Apache 2.0 base, openly licensed data; same sizes) |
 | **Code** | [`code/`](code/): data, training, evaluation, GGUF export, web app |
 | **Runs on** | llama.cpp, CPU only, 5.6 GB RAM peak |
 | **Team** | Ammer Saeed ([@OmgItsAmmer](https://github.com/OmgItsAmmer)), Mehreen ([@meh5REeen](https://github.com/meh5REeen)) |
@@ -75,7 +76,7 @@ About **3 s per line and under a minute per page on a CPU** with no GPU (measure
 *estimate* 4 to 9 s per line; we have not benchmarked a phone yet.
 
 **Licence:** UTRSet-Real is CC BY-NC-SA 4.0, so v4-NC is a separate research, non-commercial model (credit the UTRNet
-authors). The published model below is **v3**, trained only on openly licensed data (Apache 2.0 base, MIT/CC BY/OFL data).
+authors). **v4-NC is published here: [OmgItsAmmer/urdu-nastaliq-ocr-qwen3vl-2b-v4nc-GGUF](https://huggingface.co/OmgItsAmmer/urdu-nastaliq-ocr-qwen3vl-2b-v4nc-GGUF).** For commercial use, take **v3**, trained only on openly licensed data (Apache 2.0 base, MIT/CC BY/OFL data); the run instructions below use v3, and v4-NC works the same way with its own file names.
 
 ## What it does
 
