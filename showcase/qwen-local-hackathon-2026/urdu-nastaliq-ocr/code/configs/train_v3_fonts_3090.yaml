@@ -1,0 +1,39 @@
+# v3: continue from v2 with a second Nastaliq typeface and more page layouts (RTX 3090).
+# New sources (tools/render_noto_lines.py, tools/make_notebook_photos.py --from noto):
+#   nastaliq_noto    : our sentences rendered in Noto Nastaliq Urdu (OFL), clean lines
+#   print_paper_noto : those lines stacked into book pages / phone-photo style images
+# v2's sources stay in (replay) so nothing already learned is forgotten. my_photos / book_1908 are test only.
+base_model: Qwen/Qwen3-VL-2B-Instruct
+init_adapter: __INIT__            # replaced by the chain: v2 adapter if it exists, else v1
+output_dir: outputs/qwen3vl2b-urdu-ocr-lora-v3
+
+max_side: 1024
+max_length: 2560
+
+train_sources: [print_paper_noto, nastaliq_noto, handwriting_paper, print_paper, handwriting, qaari_news, nastaliq_synth]
+source_mix: {print_paper_noto: 1.0, nastaliq_noto: 0.2, handwriting_paper: 1.0, print_paper: 0.7, handwriting: 1.0, qaari_news: 0.35, nastaliq_synth: 0.08}
+
+lora:            # unused with init_adapter, kept for reference
+  r: 32
+  alpha: 64
+  dropout: 0.05
+  target: all
+
+quantize_4bit: false
+
+train:
+  epochs: 1
+  per_device_batch_size: 4
+  max_tokens_per_batch: 2048   # halved (was 4096) to cut peak VRAM; grad_accum doubled to keep the step size
+  max_batch_examples: 16
+  grad_accum: 8
+  learning_rate: 4.0e-5
+  warmup_ratio: 0.03
+  weight_decay: 0.0
+  gradient_checkpointing: true
+  eval_steps: 200
+  save_steps: 200
+  logging_steps: 20
+  max_train_examples: null
+  max_eval_examples: 400
+  num_workers: 4

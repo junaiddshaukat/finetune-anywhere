@@ -1,0 +1,32 @@
+# Laptop profile: RTX 4070 Laptop (8 GB). Smoke tests and small runs.
+base_model: Qwen/Qwen3-VL-2B-Instruct
+output_dir: outputs/qwen3vl2b-urdu-ocr-lora-laptop
+
+max_side: 896
+max_length: 768
+
+train_sources: [nastaliq_synth, qaari_news, handwriting]
+source_mix: {qaari_news: 3.0, handwriting: 4.0}
+
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target: all
+
+quantize_4bit: false
+
+train:
+  epochs: 1
+  per_device_batch_size: 2
+  grad_accum: 8
+  learning_rate: 1.0e-4
+  warmup_ratio: 0.03
+  weight_decay: 0.0
+  gradient_checkpointing: true
+  eval_steps: 500
+  save_steps: 500
+  logging_steps: 20
+  max_train_examples: 20000
+  max_eval_examples: 200
+  num_workers: 0

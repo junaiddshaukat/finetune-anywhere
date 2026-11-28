@@ -1,0 +1,37 @@
+# Main training profile: RTX 3090 (24 GB). bf16 LoRA on language model + vision encoder.
+base_model: Qwen/Qwen3-VL-2B-Instruct      # also try Qwen/Qwen3-VL-4B-Instruct (better, slower)
+output_dir: outputs/qwen3vl2b-urdu-ocr-lora
+
+max_side: 1024           # long edge of line images (Urdu lines are wide)
+max_length: 2560       # news page ~700 image tokens + ~1000 text tokens
+
+# Which manifest sources to train on (never the evaluation-only book_1908 or my_photos)
+train_sources: [nastaliq_synth, qaari_news, handwriting]
+# Oversample the small real/handwritten sets so they aren't drowned by synthetic data
+source_mix: {qaari_news: 2.0, handwriting: 4.0}   # x2 news: ~34M tokens, ~6 h on a 3090
+
+lora:
+  r: 32
+  alpha: 64
+  dropout: 0.05
+  target: all            # "all" = LM + vision encoder (OCR needs the vision side to adapt)
+
+quantize_4bit: false
+
+train:
+  epochs: 1
+  per_device_batch_size: 4   # not used for batching: see max_tokens_per_batch
+  # Batches are packed up to this many tokens (padding included): 2 news pages, or ~30 lines.
+  max_tokens_per_batch: 4096
+  max_batch_examples: 32
+  grad_accum: 4          # ~4 x 6k tokens per optimizer step
+  learning_rate: 1.0e-4
+  warmup_ratio: 0.03
+  weight_decay: 0.0
+  gradient_checkpointing: true
+  eval_steps: 500
+  save_steps: 500
+  logging_steps: 20
+  max_train_examples: null
+  max_eval_examples: 400
+  num_workers: 4
