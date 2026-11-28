@@ -1,0 +1,40 @@
+project_name: "Harf: Pocket-sized Urdu OCR, from handwritten notes to century-old books"
+slug: urdu-nastaliq-ocr
+event: qwen-local-hackathon-2026
+members:
+- name: Ammer Saeed
+  github: OmgItsAmmer
+- name: Mehreen
+  github: meh5REeen
+one_liner: Reads printed and handwritten Urdu Nastaliq from photos and scans, offline on a laptop CPU.
+base_model: Qwen/Qwen3-VL-2B-Instruct
+training_tool: other  # transformers Trainer + PEFT LoRA, three rounds (v1 -> v2 -> v3)
+training_platform: local-nvidia
+method: lora
+dataset:
+  description: >-
+    Three training rounds, all from openly licensed data. v1: 60k synthetic Nastaliq lines
+    (PuristanLabs1/urdu-ocr-1M, MIT), 8k news pages (oddadmix Qaari news, MIT) and 1.9k tablet-handwritten
+    lines from 311 writers (OUHD-L, CC BY 4.0). v2/v3: the same sources re-rendered into photo-like
+    images (handwriting on ruled notebook paper with shadows, tilt and blur; solid-ink synthetic lines
+    stacked into multi-line pages; a second typeface, Noto Nastaliq Urdu, OFL). Final round: 25,569
+    examples. Splits by sentence (printed) and by writer (handwriting); every test sentence is absent
+    from training; an evaluation-only 1908 book scan and 3 real photos were never trained on.
+  size: 25569
+  link: https://huggingface.co/datasets/PuristanLabs1/urdu-ocr-1M
+model_link: https://huggingface.co/OmgItsAmmer/urdu-nastaliq-ocr-qwen3vl-2b-GGUF
+quantization: GGUF Q8_0 (1.8 GB, recommended) and Q4_K_M (1.1 GB), plus an f16 vision projector (0.8 GB)
+runtime: llama.cpp
+hardware_tested: >-
+  Trained on 1x RTX 3090 24 GB (v3 peak 11.4 GB VRAM reserved). Inference tested CPU-only on an Intel
+  i7-13700KF (8 threads, no GPU): about 3 s per handwritten line, about 25-60 s per multi-line page,
+  5.6 GB RAM. Also run CPU-only on a Lenovo Legion laptop (i7-13700HX, 32 GB): about 3.9 GB RAM, 2-17 s per scanned book band. Not benchmarked on phones.
+demo_video: https://www.linkedin.com/posts/ammersaeed21_qwenlocalhackathon-urdu-ocr-ugcPost-7532379115094634496-6hqZ/
+repo_link: https://github.com/OmgItsAmmer/urdu-nastaliq-ocr-qwen3vl
+before_after:
+  prompt: >-
+    [held-out test image nastaliq_synth/tc581992f56e01.png] Read the Urdu text in this image and
+    write it out exactly, in Urdu script. Keep the original words and punctuation. Output only the
+    text, nothing else.
+  base_output: تیمیر مسلکِ کے اصل کا بچنے تیزاق نے الگہاتان کے
+  finetuned_output: نجیب رزاق نے انگلستان کے اعلیٰ کالجوں سے تعلیم حاصل کی۔

@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Urdu Reader · Nastaliq OCR</title>
+  <link rel="preload" href="/static/fonts/NotoNastaliqUrdu.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="bar">
+    <div class="brand">
+      <span class="mark" lang="ur" dir="rtl" aria-hidden="true">حرف</span>
+      <div class="brand-text">
+        <strong>Urdu Reader</strong>
+        <span>Nastaliq OCR · side-by-side model comparison</span>
+      </div>
+    </div>
+    <div class="model" id="model" title="">
+      <span class="dot" aria-hidden="true"></span>
+      <span id="model-label">Connecting…</span>
+    </div>
+  </header>
+
+  <div class="app">
+    <aside class="rail" aria-label="Images and models">
+      <label class="drop" id="drop">
+        <input id="files" type="file" accept="image/*" multiple hidden>
+        <span class="drop-title">Add images</span>
+        <span class="drop-hint">Drop files here, paste with <kbd>Ctrl</kbd>&thinsp;<kbd>V</kbd>, or <u>browse</u></span>
+      </label>
+
+      <fieldset class="segmented" aria-label="How to read">
+        <label><input type="radio" name="mode" value="whole" checked><span>Whole image</span></label>
+        <label><input type="radio" name="mode" value="lines"><span>Split into lines</span></label>
+      </fieldset>
+      <p class="mode-note" id="mode-note">Best for single lines and news-style pages.</p>
+
+      <section class="models" aria-labelledby="models-h">
+        <h4 id="models-h" class="rail-h">Models <span class="muted">· test-set CER</span></h4>
+        <ul id="model-list"></ul>
+      </section>
+
+      <h4 class="rail-h">Images</h4>
+      <ol class="queue" id="queue"></ol>
+
+      <section class="summary" id="summary" hidden aria-labelledby="sum-h">
+        <h4 id="sum-h" class="rail-h">Your images <span class="muted mono" id="sum-n"></span></h4>
+        <table id="sum-table">
+          <thead><tr><th>Model</th><th class="num">CER</th><th class="num">WER</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <button class="ghost small" id="export" type="button">Export .txt</button>
+      </section>
+    </aside>
+
+    <main class="stage" id="stage">
+      <div class="empty" id="empty">
+        <p class="empty-ur" lang="ur" dir="rtl">تصویر دیں، متن پائیں</p>
+        <h2>Compare the models on your own images</h2>
+        <p>Add a photo or scan of a printed line, a paragraph or handwriting. Every model you have
+          ticked reads it on this machine and the answers appear side by side. Paste the true text to
+          score them all at once.</p>
+      </div>
+
+      <div class="workspace" id="workspace" hidden>
+        <div class="left">
+          <figure class="viewer">
+            <div class="viewer-frame"><img id="view-img" alt=""></div>
+            <figcaption>
+              <span id="view-name" class="name"></span>
+              <span id="view-size" class="mono muted"></span>
+            </figcaption>
+          </figure>
+
+          <section class="panel" aria-labelledby="ref-h">
+            <header class="panel-head">
+              <h3 id="ref-h">True text</h3>
+              <span class="meta">optional · scores every model</span>
+            </header>
+            <textarea class="urdu ref" id="ref" lang="ur" dir="rtl" rows="3"
+                      placeholder="یہاں اصل متن لکھیں یا پیسٹ کریں"></textarea>
+            <div class="actions">
+              <button class="primary" id="score" type="button">Score all</button>
+              <button class="ghost" id="reread" type="button">Read again</button>
+              <button class="ghost" id="save" type="button"
+                      title="Saves the image and true text to data/my_photos (test only, never trained on)">Add to my test set</button>
+              <span class="note" id="save-note" role="status"></span>
+            </div>
+            <div class="legend" id="legend" hidden>
+              <span><i class="sw wrong"></i>wrong word (hover for the true one)</span>
+              <span><i class="sw missed"></i>missed</span>
+              <span><i class="sw extra"></i>extra</span>
+            </div>
+          </section>
+        </div>
+
+        <div class="right">
+          <div class="columns" id="columns"></div>
+          <p class="no-models" id="no-models" hidden>All models are switched off. Tick one on the left.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <template id="col-tpl">
+    <section class="col panel">
+      <header class="col-head">
+        <div>
+          <h3 class="col-name"></h3>
+          <span class="col-tag"></span>
+        </div>
+        <div class="col-stats">
+          <span class="badge" hidden>Best here</span>
+          <span class="stat" hidden><span class="k">CER</span><span class="v mono cer"></span></span>
+          <span class="stat" hidden><span class="k">WER</span><span class="v mono wer"></span></span>
+        </div>
+      </header>
+      <div class="urdu out" lang="ur" dir="rtl" aria-live="polite"></div>
+      <div class="urdu diff" lang="ur" dir="rtl" hidden></div>
+      <footer class="col-foot">
+        <span class="meta mono col-meta"></span>
+        <button class="ghost small copy" type="button">Copy text</button>
+      </footer>
+    </section>
+  </template>
+
+  <div class="toast" id="toast" role="status" hidden></div>
+  <script src="/static/app.js"></script>
+</body>
+</html>

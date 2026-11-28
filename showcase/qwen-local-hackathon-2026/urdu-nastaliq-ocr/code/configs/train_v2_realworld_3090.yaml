@@ -1,0 +1,40 @@
+# v2: continue the v1 fine-tune on real-world-looking data (RTX 3090, ~2-3 h).
+# v1 read its own test set well but failed on real photos: notebook handwriting (tablet strokes only
+# in training) and multi-line printed pages. New sources come from tools/make_notebook_photos.py:
+#   handwriting_paper : OUHD-L lines stacked on ruled notebook "photos" (writer-disjoint splits)
+#   print_paper       : solid-ink synthetic Nastaliq lines stacked into book pages / photos
+# The old sources stay in, subsampled, so v1's skills are not forgotten.
+base_model: Qwen/Qwen3-VL-2B-Instruct
+init_adapter: outputs/qwen3vl2b-urdu-ocr-lora     # continue from v1 (keeps its r/alpha/targets)
+output_dir: outputs/qwen3vl2b-urdu-ocr-lora-v2
+
+max_side: 1024
+max_length: 2560
+
+train_sources: [handwriting_paper, print_paper, handwriting, qaari_news, nastaliq_synth]
+source_mix: {handwriting_paper: 1.5, print_paper: 1.0, handwriting: 1.0, qaari_news: 0.5, nastaliq_synth: 0.12}
+
+lora:            # unused with init_adapter, kept for reference
+  r: 32
+  alpha: 64
+  dropout: 0.05
+  target: all
+
+quantize_4bit: false
+
+train:
+  epochs: 1
+  per_device_batch_size: 4
+  max_tokens_per_batch: 4096
+  max_batch_examples: 32
+  grad_accum: 4
+  learning_rate: 5.0e-5     # half of v1: refine, don't overwrite
+  warmup_ratio: 0.03
+  weight_decay: 0.0
+  gradient_checkpointing: true
+  eval_steps: 200
+  save_steps: 200
+  logging_steps: 20
+  max_train_examples: null
+  max_eval_examples: 400
+  num_workers: 4

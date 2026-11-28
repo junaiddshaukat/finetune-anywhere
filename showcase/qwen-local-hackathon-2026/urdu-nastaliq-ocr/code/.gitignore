@@ -1,0 +1,54 @@
+# ---- Secrets / credentials (never commit) ----
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials*.json
+secrets*.json
+.claude/settings.local.json
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# ---- Data (large / licensed / private) ----
+data/raw/
+data/processed/
+data/preview/
+data/my_photos/*
+!data/my_photos/README.md
+
+# ---- Training outputs, checkpoints and model weights ----
+outputs/
+checkpoints/
+runs/
+wandb/
+*.gguf
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.ckpt
+*.onnx
+
+# ---- Logs ----
+*.log
+logs/
+
+# ---- Third-party papers (copyrighted): keep locally, never commit ----
+docs/*.pdf
+docs/**/*.pdf
+
+# ---- OS / editor ----
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,22 @@
+# Install torch separately with the CUDA build for your GPU:
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu126
+transformers>=5.0
+peft>=0.17
+accelerate>=1.0
+datasets>=4.0
+huggingface_hub>=1.0
+pyarrow>=15
+pillow>=11.0
+numpy>=1.26
+opencv-python-headless>=4.9   # text-size measurement for auto-enlarge (uocr.pages)
+pyyaml>=6.0
+python-dotenv>=1.0
+rapidfuzz>=3.0        # fast edit distance for CER on full pages
+
+# Optional: Claude as the "big cloud model" baseline in eval
+anthropic>=0.120
+
+# Web app
+fastapi>=0.115
+uvicorn>=0.30
+python-multipart>=0.0.9
