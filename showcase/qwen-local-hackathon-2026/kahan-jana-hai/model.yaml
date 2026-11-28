@@ -6,10 +6,10 @@ event: 'qwen-local-hackathon-2026'
 members:
 - name: 'Muhammad Waqar'
   github: 'Muhammad-waqar-uit'
-one_liner: 'A 0.5B Qwen that turns messy Roman Urdu, English or Urdu-script bus queries into the two Karachi stops the rider means, so an offline PWA can route them.'
+one_liner: 'A 0.5B Qwen extracts Karachi bus stops from messy Roman Urdu, English, or Urdu queries for offline route planning.'
 base_model: 'Qwen/Qwen2.5-0.5B-Instruct'
-training_tool: 'transformers + trl SFTTrainer + peft (LoRA)'
-training_platform: 'local Windows laptop'
+training_tool: 'trl'
+training_platform: 'local-nvidia'
 method: 'lora'
 dataset:
   description: '5,641 generated chat-format examples built from the app''s own 1,631-stop Karachi registry (2010 route listing + OpenStreetMap names, ODbL), varied by Roman Urdu spelling variants, typos, casing, one-stop queries (balanced between the from and to fields) and no-place queries, plus 24 hand-written phrasings. 201 held-out queries use different templates, different stop pairs and a fixed seed.'
@@ -17,10 +17,9 @@ dataset:
   link: 'https://huggingface.co/abdul1977ghaffar/karachi-bus-query-parser/tree/main/dataset'
 model_link: 'https://huggingface.co/abdul1977ghaffar/karachi-bus-query-parser'
 quantization: 'Q4_K_M GGUF, 380 MB (373.71 MiB, 6.3455 BPW), general.file_type 15 verified from the GGUF header'
-runtime: 'ollama 0.40.18 — 100% GPU, 936 MB loaded with a 32k context, ~50–100 tok/s; llama.cpp used for the export'
+runtime: 'ollama'
 hardware_tested: 'ASUS laptop — RTX 4060 Laptop GPU 8 GB, Ryzen 7 8845HS, 16 GB RAM; Qwen2.5-0.5B LoRA trains in ~27 min, inference 100% on GPU via Ollama'
-onnx: 'fp16 export 981 MB, verified in Transformers.js (3/4 exact, 0.8–1.5 s per query); int8 not shippable with this toolchain'
-demo_video: ''  # filled in with the public post link before the deadline
+demo_video: ''
 repo_link: 'https://github.com/Muhammad-waqar-uit/karachi-bus-query-parser'
 before_after:
   prompt: 'bhai mahtab cniema jaana hai, abhi first chowrangi mein khara hoon'
