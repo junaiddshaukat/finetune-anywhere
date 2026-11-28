@@ -107,6 +107,34 @@ accepts only `int4/int8/nvfp4/mxfp4/mxfp8`), and importing safetensors directly
 fails on Windows with `unsupported MLX architecture`. The GGUF must be produced by
 llama.cpp first.
 
+### Transformers.js (ONNX)
+
+The model can also run in a browser via Transformers.js using the exported ONNX
+weights. The export is **fp16** (~981 MB), verified in Node with
+`@huggingface/transformers`:
+
+```
+saddar se gulshan chorangi kaise jaun     -> {"from": "Saddar", "to": "Gulshan Chorangi"}     1.5 s
+bhai mahtab cniema jaana hai, abhi ...    -> {"from": "First Chowrangi", "to": "Maitab Cinema"} 1.4 s
+tower jana hai                            -> {"from": null, "to": "Tower"}                   0.8 s
+bus ka kiraya kitna hai                   -> {"from": null, "to": null}                        0.8 s
+```
+
+Three of four exact; the fourth is the usual single-character slip, which the app's
+fuzzy matcher repairs. Quantization to int8 was attempted but not shippingable with
+the current ONNX Runtime build (dynamic quant rejects fp16 scales in
+`DequantizeLinear`, MatMul-only quant produces garbage, no-cache fp32 export
+quant produces garbage tokens). The browser path costs ~1 GB fp16; the GGUF + Ollama
+route remains the recommended 380 MB Q4 demo.
+
+To try in Node:
+
+```ts
+import { pipeline } from "@huggingface/transformers";
+const pipe = await pipeline("text-generation", "abdul1977ghaffar/karachi-bus-query-parser",
+  { dtype: "fp16", device: navigator.gpu ? "webgpu" : "wasm" });
+```
+
 Reproduce the fine-tune from this repo:
 
 ```bash
