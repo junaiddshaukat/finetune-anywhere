@@ -1,0 +1,35 @@
+# Qwen Local Hackathon 2026 entry. Every number is measured; evidence is linked in README.md.
+project_name: 'Daakiya: WhatsApp COD orders to courier bookings'
+slug: daakiya
+event: qwen-local-hackathon-2026
+members:
+- name: Mufeez Hanif
+  github: mufeezhanif
+one_liner: Turns messy Roman Urdu/English WhatsApp COD orders into courier-ready bookings, offline on CPU.
+base_model: Qwen/Qwen3-1.7B
+training_tool: unsloth
+training_platform: colab
+method: qlora
+dataset:
+  description: >-
+    720 synthetic WhatsApp/Instagram COD order messages (English, Roman Urdu, mixed) with exact JSON labels
+    computed from the generator's own specification; 60 validation. No real customer data. Held-out tests:
+    100 in-distribution, 80 out-of-distribution (7 unseen cities, unseen phrasing and style) and 28 hand-written
+    messages labelled one by one. No prompt appears in two splits.
+  size: 720
+  link: https://github.com/mufeezhanif/daakiya/tree/main/data
+model_link: https://huggingface.co/someone786/daakiya-qwen3-1.7b-GGUF
+quantization: GGUF Q4_K_M (recommended, about 1.1 GB) and Q8_0, exported with Unsloth/llama.cpp from the merged model
+runtime: llama.cpp
+hardware_tested: >-
+  CPU only, no GPU: llama.cpp b12818 server with -ngl 0 on a free Google Colab CPU runtime
+  (Intel Xeon @ 2.20GHz, 2 vCPU, 13.6 GB RAM). Q4_K_M used 2.1 GB RAM, about 26 s per order
+  at 4.9 tokens/s. Training on a free Colab Tesla T4.
+demo_video: 'https://github.com/mufeezhanif/daakiya#run-it'
+repo_link: https://github.com/mufeezhanif/daakiya
+before_after:
+  prompt: "bhai DHA phase 2 mein bhejna hai, house 40 lane 3, number 03458876543, naam Hamza. 2 perfume 100ml, total 5000"
+  base_output: >-
+    {"customer_name": "Hamza", "phone": "03458876543", "city": "Islamabad", "area": "DHA Phase 2", "address": "House 40, Lane 3", "landmark": null, "items": [{"name": "perfume", "qty": 2}], "cod_amount": 5000, "payment": "cod", "missing": ["city", "address"]}
+  finetuned_output: >-
+    {"customer_name": "Hamza", "phone": "03458876543", "city": null, "area": "DHA Phase 2", "address": "House 40, Lane 3", "landmark": null, "items": [{"name": "perfume 100ml", "qty": 2}], "cod_amount": 5000, "payment": "cod", "missing": ["city"]}
