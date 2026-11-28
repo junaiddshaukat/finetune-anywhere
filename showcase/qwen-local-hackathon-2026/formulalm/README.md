@@ -9,7 +9,7 @@
 
 ## What it does
 
-FormulaLM is a QLoRA-tuned, `Q5_K_M`-quantized `Qwen/Qwen3-1.7B` model (non-thinking mode) that takes a spreadsheet schema (column letters, headers, types, row bounds) plus a plain-English request and returns a single Excel formula (`=...` only), verified by executing the formula against the workbook. It runs offline on a CPU-only laptop via Ollama and a local Gradio app supporting held-out sheets, CSV/XLSX uploads (`<= 1 MB`), or pasted column headers.
+FormulaLM is a QLoRA-tuned, `Q5_K_M`-quantized `Qwen/Qwen3-1.7B` model (non-thinking mode) that takes a spreadsheet schema (column letters, headers, types, row bounds) plus a plain-English request and returns a single Excel formula (`=...` only), verified by executing the formula against the workbook. It runs offline on a CPU-only laptop via Ollama and a local Gradio app supporting held-out sheets, CSV/XLSX uploads (`<= 1 MB`) or pasted headers, and **safe `.xlsx` formula injection & download** (writes the verified formula into an auto-selected summary row or chosen empty cell and exports a ready-to-open `.xlsx` workbook).
 
 ## Why I built it
 
@@ -53,6 +53,9 @@ Optional local Gradio UI: `git clone https://github.com/abubakarp789/FormulaLM.g
 
 Every prediction is validated against an allow-list of 36 non-volatile functions and **executed** in Python `formulas 1.3.4` on the `.xlsx` workbook, then compared to an independent pandas ground truth (`tol=1e-6`). Brackets show 95% Wilson CIs (all numbers from [`results/`](https://github.com/abubakarp789/FormulaLM/tree/main/results)).
 
+![Before vs after execution-verified accuracy](charts/headline_accuracy.png)
+![Quantization accuracy and local CPU footprint](charts/quant_pareto.png)
+
 ### Fresh held-out set (`test_real_v2`, `N = 50`, not fully independent)
 
 | System | Eval Runtime | Exec. Accuracy (`N = 50`) | Exact Match | Syntax Valid |
@@ -63,6 +66,18 @@ Every prediction is validated against an allow-list of 36 non-volatile functions
 | Fine-tuned v2 (`v2-ship`, fp16) | Colab T4 | **88.0%** (44/50, `[76.2%, 94.4%]`) | 86.0% | 100.0% |
 | **v2 `Q5_K_M` GGUF (Shipped)** | Colab `llama-server` | **90.0%** (45/50, `[78.6%, 95.7%]`) | 88.0% | 100.0% |
 | **v2 `Q5_K_M` GGUF (Shipped)** | **Local CPU Ollama** | **86.0%** (43/50, `[73.8%, 93.0%]`) | 84.0% | 100.0% |
+
+### External real-world benchmark (`SpreadsheetBench Verified 400`, `N = 56`, same-size `1.7B`, local CPU)
+
+To measure true out-of-distribution transfer beyond synthetic data, we deterministically filtered [`KAKA22/SpreadsheetBench`](https://huggingface.co/datasets/KAKA22/SpreadsheetBench) (`spreadsheetbench_verified_400`, NeurIPS 2024, `CC-BY-SA-4.0`, pinned `ab0b742b` — real MrExcel/ExcelForum human-authored workbooks & questions) to **56** single-sheet `Cell-Level Manipulation` formulas inside our 36 allowed functions (`<= 20` cols, `56/56` verified gold execution, circular-reference guarded), SHA-256 frozen **before** inference ([`data/external_bench/README.md`](https://github.com/abubakarp789/FormulaLM/blob/main/data/external_bench/README.md)):
+
+| System (`1.7B`, Local CPU `i5-8365U`, `Ollama 0.40.18`) | N | Correct | **Exec. Accuracy (95% CI)** | Syntax Valid | Single-Cell | Col-Fill | Avg Latency | Gen tok/s | Peak RAM |
+|---|---:|---:|---|---:|---:|---:|---:|---:|---:|
+| Base `Qwen3-1.7B` (0-shot, Q4_K_M) | 56 | 6/56 | **10.7%** `[5.0%, 21.5%]` | 67.9% | 2/11 (18.2%) | 4/45 (8.9%) | 10.89 s | 9.8 | 2,986 MB |
+| Base `Qwen3-1.7B` (5-shot, Q4_K_M) | 56 | 6/56 | **10.7%** `[5.0%, 21.5%]` | 64.3% | 1/11 (9.1%) | 5/45 (11.1%) | 11.65 s | 8.8 | 2,012 MB |
+| **FormulaLM `Q5_K_M` (Shipped, 0-shot)** | 56 | **12/56** | **21.4%** `[12.7%, 33.8%]` | **89.3%** | **3/11 (27.3%)** | **9/45 (20.0%)** | 12.16 s | 9.0 | **2,006 MB** |
+
+On unseen messy real-world forum sheets, **FormulaLM doubles Base `Qwen3-1.7B`** (`21.4%` vs `10.7%`, **2.0×**) and raises syntax validity from `67.9%` to **89.3%** (`+21.4 pp`), while honestly showing the domain gap between clean single-table synthetic sheets (`86–90%`) and multi-table forum essays (`21.4%`).
 
 ### Quantization & Local CPU Benchmark (`v2-ship`, Windows 11 i5-8365U 8 GB CPU-only)
 
