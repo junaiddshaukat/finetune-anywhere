@@ -19,7 +19,7 @@ model_link: 'https://huggingface.co/abdul1977ghaffar/karachi-bus-query-parser'
 quantization: 'Q4_K_M GGUF, 380 MB (373.71 MiB, 6.3455 BPW), general.file_type 15 verified from the GGUF header'
 runtime: 'ollama'
 hardware_tested: 'ASUS laptop — RTX 4060 Laptop GPU 8 GB, Ryzen 7 8845HS, 16 GB RAM; Qwen2.5-0.5B LoRA trains in ~27 min, inference 100% on GPU via Ollama'
-demo_video: ''
+demo_video: 'https://x.com/MW4Q4R/status/2126505119038796047'
 repo_link: 'https://github.com/Muhammad-waqar-uit/karachi-bus-query-parser'
 before_after:
   prompt: 'bhai mahtab cniema jaana hai, abhi first chowrangi mein khara hoon'
