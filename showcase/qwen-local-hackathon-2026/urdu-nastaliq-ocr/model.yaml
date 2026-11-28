@@ -30,7 +30,7 @@ hardware_tested: >-
   i7-13700KF (8 threads, no GPU): about 3 s per handwritten line, about 25-60 s per multi-line page,
   5.6 GB RAM. Also run CPU-only on a Lenovo Legion laptop (i7-13700HX, 32 GB): about 3.9 GB RAM, 2-17 s per scanned book band. Not benchmarked on phones.
 demo_video: https://www.linkedin.com/posts/ammersaeed21_qwenlocalhackathon-urdu-ocr-ugcPost-7532379115094634496-6hqZ/
-repo_link: ''
+repo_link: https://github.com/OmgItsAmmer/urdu-nastaliq-ocr-qwen3vl
 before_after:
   prompt: >-
     [held-out test image nastaliq_synth/tc581992f56e01.png] Read the Urdu text in this image and
