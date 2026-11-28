@@ -28,7 +28,7 @@ runtime: llama.cpp
 hardware_tested: >-
   Trained on 1x RTX 3090 24 GB (v3 peak 11.4 GB VRAM reserved). Inference tested CPU-only on an Intel
   i7-13700KF (8 threads, no GPU): about 3 s per handwritten line, about 25-60 s per multi-line page,
-  5.6 GB RAM. Not tested on laptops or phones.
+  5.6 GB RAM. Also run CPU-only on a Lenovo Legion laptop (i7-13700HX, 32 GB): about 3.9 GB RAM, 2-17 s per scanned book band. Not benchmarked on phones.
 demo_video: https://TODO
 repo_link: ''
 before_after:

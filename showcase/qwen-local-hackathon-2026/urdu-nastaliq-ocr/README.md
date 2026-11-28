@@ -200,8 +200,9 @@ models side by side: `make demo`.
 | 13-line typeset page | about 53 s | about 65 s |
 | CER on our real photos + test lines (19 items) | 2.8% | 3.5% |
 
-Q8_0 gave the same error rate on CPU and GPU on our real-photo check (3.8%). We have **not** tested laptops or phones. Older laptop CPUs
-will be slower; treat anything beyond this desktop as an estimate.
+**Also checked on a laptop** (Lenovo Legion, Intel i7-13700HX, 32 GB, CPU only, llama.cpp b12728, 8 threads): the Q8_0 model loads in about 3 s, uses about 3.9 GB of RAM, and reads a scanned 1908 book band in 2 to 17 s depending on how many lines it holds.
+
+Q8_0 gave the same error rate on CPU and GPU on our real-photo check (3.8%). We have not benchmarked phones yet; older laptop CPUs will be slower.
 
 ## Results
 
