@@ -1,0 +1,31 @@
+project_name: GeneLens-Qwen
+slug: genelens-qwen
+event: qwen-local-hackathon-2026
+members:
+- name: Syed Osama Ali Shah
+  github: Osamaali313
+one_liner: 'Offline DNA promoter specialist: Qwen3-4B LoRA, MCC 0.71 vs 0.09 zero-shot, with a private desktop app.'
+base_model: Qwen/Qwen3-4B-Base
+training_tool: unsloth
+training_platform: colab
+method: lora
+dataset:
+  description: 'GUE prom_core_all: human core-promoter classification, 70 bp windows, balanced. 47,072 training windows after removing exact overlaps with dev and test; 5,903 dev; 5,920 frozen test windows scored once per model. Not redistributed (licence unstated).'
+  size: 47072
+  link: https://huggingface.co/datasets/leannmlindsey/GUE
+model_link: https://huggingface.co/OsamaAli313/genelens-qwen3-4b-promoter
+quantization: Q5_K_M (GGUF, 2.89 GB)
+runtime: llama.cpp
+hardware_tested: 'Windows 11 laptop, Intel Core i5-10400H, 31 GB RAM, CPU only (llama.cpp, 6 threads, about 3 to 6 s per 70 bp window). Training: Google Colab L4 and A100.'
+demo_video: https://www.linkedin.com/posts/syedosamaali72_qwenlocalhackathon-localai-finetuning-ugcPost-7532333609886564353-6055
+repo_link: https://github.com/Osamaali313/genelens-qwen
+before_after:
+  prompt: 'Task: classify a 70 bp human DNA sequence. 1 = core promoter, 0 = not a core promoter.
+
+    Research use only; not a medical diagnosis.
+
+    Sequence: T G T C C T A A T A A G G G A A G C A A G A A G T G T A T T T A T C A C A G A C A T G A A A G C T A A C C G A G G A C T T G A G A G A C T C
+
+    Label:'
+  base_output: 'Base Qwen3-4B-Base, no adapter, same prompt. Plain generation: '' 0'' followed by a repeat of the template (''Sequence: T G T C C T A A T A A G G G A A G C A ...''), so it continues a pattern instead of answering. Constrained readout (softmax over tokens 0 and 1): P(1) = 0.407. Its P(1) is 0.35 to 0.41 on every window tried, i.e. no usable signal.'
+  finetuned_output: 'GeneLens spaced Q5_K_M GGUF through llama-server: answer ''1'' (core promoter), P(1) = 0.643. The window is the annotated transcription start site of human FOXP2 (GRCh38 chr7:114414781-114414850), checked to share no 24-mer with any GUE train, dev or test window. Same run on a FOXP2 intron window: ''0'', P(1) = 0.076 (correct). Same run on the SOX2 promoter window: ''0'', P(1) = 0.267 (WRONG, a miss). Three windows are an illustration only; the evidence is the 5,920-window test split (MCC 0.711 over 3 seeds vs 0.092 zero-shot).'
