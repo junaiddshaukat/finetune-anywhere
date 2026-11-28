@@ -1,0 +1,30 @@
+project_name: Javed
+slug: javed
+event: qwen-local-hackathon-2026
+members:
+- name: Abdullah Khan Sherwani
+  github: Abdullah-Khan-Sherwani
+one_liner: Qwen3.5-0.8B LoRA decision adapter for single-pass product matching (80.8% F1, 87.4% AP on 4,500 WDC test pairs).
+base_model: Qwen/Qwen3.5-0.8B
+training_tool: other
+training_platform: colab
+method: lora
+dataset:
+  description: WDC Products 80% corner-case medium benchmark (6,000 train, 3,500 validation, 4,500 unseen test pairs; title, brand, and 100-word-capped description; no price or currency)
+  size: 6000
+  link: https://github.com/wbsg-uni-mannheim/MatchGPT/tree/ba1691935c744bb0eacc9abf772f39271e318e4b/LLMForEM/data/wdc
+model_link: https://huggingface.co/AbdullahKhanSherwani/Javed
+quantization: fp16 (LoRA)
+runtime: transformers
+hardware_tested: NVIDIA L4 (Google Colab; 2.0 GB peak inference VRAM, 2.5 GB peak training VRAM)
+demo_video: https://www.linkedin.com/posts/abdullahkhansherwani_qwenlocalhackathon-ugcPost-7532386077832110080-cOav/
+repo_link: ''
+before_after:
+  prompt: |-
+    Held-out WDC Products unseen test pair (wdc_f5e3826378a43ee0):
+    offer_a: {"title": "Mf Las B/N A4 Lan F/R 40Ppm Brother Dcpl5500Dn", "description": null, "brand": null}
+    offer_b: {"title": "Brother DCP-L5500DN multifunctional Laser 1200 x 1200 DPI 40 ppm A4", "description": "Brother DCP-L5500DN, Laser, Mono printing, 1200 x 1200 DPI, A4, Direct printing, Black, Graphite", "brand": null}
+    Question: Do the two product offers describe the same real-world product (same make, model and variant)? Answer MATCH if they are the same product, DIFFERENT if they are not.
+    Options: A = MATCH (Both offers describe the same product.), B = DIFFERENT (The offers describe different products, variants or models.)
+  base_output: 'DIFFERENT (T=1.0 softmax P(MATCH)=0.0550; raw restricted logits MATCH=24.4844, DIFFERENT=27.3281; below both validation max-F1 threshold 0.1441 and 1% FPR threshold 0.2659; gold label: MATCH)'
+  finetuned_output: 'MATCH (T=1.0 softmax P(MATCH)=0.9981; raw restricted logits MATCH=22.2969, DIFFERENT=16.0469; clears both validation max-F1 threshold 0.8222 and 1% FPR threshold 0.9927; gold label: MATCH)'
