@@ -1,0 +1,35 @@
+project_name: 'FormulaLM'
+slug: 'formulalm'
+event: 'qwen-local-hackathon-2026'
+members:
+- name: 'Abu Bakar'
+  github: 'abubakarp789'
+one_liner: 'Offline Qwen3-1.7B assistant turning plain-English requests into execution-verified Excel formulas on CPU.'
+base_model: 'Qwen/Qwen3-1.7B'
+training_tool: 'unsloth'
+training_platform: 'colab'
+method: 'qlora'
+dataset:
+  description: '100% synthetic Excel formula dataset across 25 generated sheets (20 train, 5 held-out test), 36 non-volatile functions, 60 base templates (+2 v2 train-only templates): 9,000 v2 train / 500 val / 500 synthetic test / 80 test_real / 50 fresh held-out test_real_v2.'
+  size: 9000
+  link: 'https://github.com/abubakarp789/FormulaLM/blob/main/data/DATASET_CARD.md'
+model_link: 'https://huggingface.co/abubakar56/formulalm-qwen3-1.7b-gguf'
+quantization: 'Q5_K_M'
+runtime: 'ollama'
+hardware_tested: 'Windows 11 laptop, Intel Core i5-8365U, 8 GB RAM, CPU-only (no GPU); trained and evaluated on Google Colab Tesla T4 (14.56 GB VRAM)'
+demo_video: 'https://x.com/abubakarp56/status/2126392963379179557'
+repo_link: 'https://github.com/abubakarp789/FormulaLM'
+before_after:
+  prompt: |-
+    Sheet: sales_retail_store (rows 2..115)
+    Columns:
+    A: Receipt Code (text)
+    B: Sale Date (date)
+    C: Store Branch (category)
+    D: Item Name (text)
+    E: Quantity (integer)
+    F: Net Amount (decimal)
+
+    Request: How many Brinport sales had Quantity of at least 15?
+  base_output: '=SUMPRODUCT((E2:E115>=15)*(C2:C115="Brinport")) [0-shot: unsupported_function] | =COUNTIF(E2:E115,">=15") [5-shot: returns 48, expected 16]'
+  finetuned_output: '=COUNTIFS(C2:C115,"Brinport",E2:E115,">=15") [Q5_K_M local Ollama & Colab: executes to 16 = ground truth]'
