@@ -7,6 +7,7 @@ A 2B vision model taught one hard job: reading Nastaliq, the joined, sloping scr
 |---|---|
 | **Best model (v4-NC)** | [OmgItsAmmer/urdu-nastaliq-ocr-qwen3vl-2b-v4nc-GGUF](https://huggingface.co/OmgItsAmmer/urdu-nastaliq-ocr-qwen3vl-2b-v4nc-GGUF) (non-commercial, CC BY-NC-SA 4.0; GGUF Q8_0 1.8 GB / Q4_K_M 1.1 GB + LoRA adapter) |
 | **Open model (v3)** | [OmgItsAmmer/urdu-nastaliq-ocr-qwen3vl-2b-GGUF](https://huggingface.co/OmgItsAmmer/urdu-nastaliq-ocr-qwen3vl-2b-GGUF) (Apache 2.0 base, openly licensed data; same sizes) |
+| **Demo video** | [LinkedIn post](https://www.linkedin.com/posts/ammersaeed21_qwenlocalhackathon-urdu-ocr-ugcPost-7532379115094634496-6hqZ/) |
 | **Code** | [`code/`](code/): data, training, evaluation, GGUF export, web app |
 | **Runs on** | llama.cpp, CPU only, 5.6 GB RAM peak |
 | **Team** | Ammer Saeed ([@OmgItsAmmer](https://github.com/OmgItsAmmer)), Mehreen ([@meh5REeen](https://github.com/meh5REeen)) |
