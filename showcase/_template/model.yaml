@@ -1,33 +1,44 @@
-# Submission form, not a published entry. Complete it in your own entry folder.
-#
-# You only need to do one of: fine-tune, quantize, or run a Qwen model locally.
-# Did not fine-tune? Set training_tool, training_platform and method to none,
-# and leave model_link, quantization and before_after empty if they do not apply.
-# Fine-tuned? model_link and a real before_after are required.
-project_name: ''
-slug: ''
-event: ''
+
+project_name: "SafeShell"
+slug: "safeshell"
+event: "Qwen Local Hackathon 2026"
+
 members:
-- name: ''
-  github: ''
-one_liner: ''
-base_model: ''
-training_tool: none
-training_platform: none
-method: none
+  - name: "Yusra Fatima"
+    github: "Usrafatima"
+
+one_liner: "A fine-tuned Qwen3-1.7B PowerShell Command Safety Assistant that classifies command risks, detects dangerous command chains, explains potential impacts, and suggests safer alternatives."
+
+base_model: "Qwen/Qwen3-1.7B"
+
+training_tool: "Unsloth"
+training_platform: "Google Colab (Tesla T4)"
+method: "4-bit QLoRA / LoRA"
+
 dataset:
-  description: ''
-  size: 0
-  link: ''
-model_link: ''
-quantization: ''
-runtime: ''
-hardware_tested: ''
-# Hackathon entries: link your public LinkedIn or X demo post that tags
-# M Junaid and Qwen Pakistan and uses #QwenLocalHackathon.
-demo_video: ''
-repo_link: ''
+  description: "48 synthetic PowerShell command examples labeled with LOW, MEDIUM, and HIGH risk levels, including potentially destructive operations, security changes, and command chains. Split into 33 training, 6 validation, and 9 held-out evaluation examples."
+  size: 48
+  link: ""
+
+model_link: "https://huggingface.co/YFatima/safeshell-qwen3-1.7b-gguf"
+
+quantization: "Q4_K_M GGUF"
+runtime: "llama.cpp with llama-cpp-python; Gradio dashboard"
+hardware_tested: "Google Colab Tesla T4 for fine-tuning and model inference"
+
+demo_video: "https://youtu.be/3zuwIAlgM0s"
+repo_link: ""
+
 before_after:
-  prompt: ''
-  base_output: ''
-  finetuned_output: ''
+  prompt: 'Analyze this PowerShell command and return JSON with risk_level, requires_human_review, explanation, and safer_alternative: Get-ChildItem C:\Temp | Remove-Item -Recurse -Force'
+
+  base_output: |
+    The base Qwen3-1.7B model produced a verbose, incomplete response that did not provide the required complete structured JSON for this test.
+
+  finetuned_output: |
+    {
+      "risk_level": "HIGH",
+      "requires_human_review": true,
+      "explanation": "Permanently deletes files and folders in the specified directory.",
+      "safer_alternative": "Get-Item C:\\Temp\\*"
+    }
