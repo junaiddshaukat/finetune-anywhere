@@ -93,13 +93,14 @@ tower jana hai                                        -> {"from": null, "to": "T
 bhai mahtab cniema jaana hai, abhi first chowrangi..  -> {"from": "First Chowrangi", "to": "Mahtab Cinema"}
 ```
 
-Reproduce the export (Windows, no C++ toolchain — prebuilt llama.cpp binaries):
+Reproduce the export from the parser repository root with llama.cpp installed
+separately; its source and binaries are not included in that repository:
 
 ```bash
-python finetune/merge.py
-python finetune/llama-src/convert_hf_to_gguf.py finetune/merged \
-  --outfile finetune/karachi-f16.gguf --outtype f16
-./finetune/llama-bin/llama-quantize.exe finetune/karachi-f16.gguf finetune/karachi-q4_k_m.gguf Q4_K_M
+python merge.py
+python path/to/llama.cpp/convert_hf_to_gguf.py merged \
+  --outfile karachi-f16.gguf --outtype f16
+llama-quantize karachi-f16.gguf karachi-q4_k_m.gguf Q4_K_M
 ```
 
 Note: `ollama create --quantize q4_K_M` does not work on this Ollama version (it
@@ -135,14 +136,17 @@ const pipe = await pipeline("text-generation", "abdul1977ghaffar/karachi-bus-que
   { dtype: "fp16", device: navigator.gpu ? "webgpu" : "wasm" });
 ```
 
-Reproduce the fine-tune from this repo:
+Reproduce the fine-tune from the root of the
+[public parser repository](https://github.com/Muhammad-waqar-uit/karachi-bus-query-parser).
+Set `STOPS_PATH` to an available `normalized-stops.json` before regenerating data;
+the registry is not included.
 
 ```bash
-python finetune/make_data.py     # build train/test jsonl from the stop registry
-python finetune/eval.py base     # baseline
-python finetune/train.py         # ~22 min on an 8 GB RTX 4060
-python finetune/eval.py tuned    # after
-python finetune/report.py        # writes results/RESULTS.md
+python make_data.py              # build train/test jsonl
+python eval.py base              # baseline
+python train.py                  # ~27 min on an 8 GB RTX 4060
+python eval.py tuned             # after
+python report.py                 # writes results/RESULTS.md
 ```
 
 ## Before and after
