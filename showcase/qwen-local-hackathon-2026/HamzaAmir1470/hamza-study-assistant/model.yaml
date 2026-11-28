@@ -1,0 +1,4 @@
+name: "Study-Assistant-Qwen-1.7B"
+base_model: "Qwen/Qwen3-1.7B"
+method: "lora"
+task: "Extracts structured study notes (topic, concepts, actions) from raw text."
