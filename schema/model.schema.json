@@ -16,7 +16,6 @@
     },
     "quantization": {
       "type": "string",
-      "minLength": 1,
       "maxLength": 4000
     },
     "hardware_tested": {
@@ -72,12 +71,11 @@
       "properties": {
         "description": {
           "type": "string",
-          "minLength": 1,
           "maxLength": 4000
         },
         "size": {
           "type": "integer",
-          "minimum": 1
+          "minimum": 0
         },
         "link": {
           "anyOf": [
@@ -94,9 +92,16 @@
       }
     },
     "model_link": {
-      "type": "string",
-      "pattern": "^https://(?:huggingface\\.co|modelscope\\.cn|www\\.modelscope\\.cn)/[^\\s]+$",
-      "maxLength": 2048
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^https://(?:huggingface\\.co|modelscope\\.cn|www\\.modelscope\\.cn)/[^\\s]+$",
+          "maxLength": 2048
+        },
+        {
+          "const": ""
+        }
+      ]
     },
     "demo_video": {
       "anyOf": [
@@ -133,23 +138,21 @@
       "properties": {
         "prompt": {
           "type": "string",
-          "minLength": 1,
           "maxLength": 4000
         },
         "base_output": {
           "type": "string",
-          "minLength": 1,
           "maxLength": 4000
         },
         "finetuned_output": {
           "type": "string",
-          "minLength": 1,
           "maxLength": 4000
         }
       }
     },
     "training_tool": {
       "enum": [
+        "none",
         "unsloth",
         "mlx",
         "llama-factory",
@@ -161,6 +164,7 @@
     },
     "training_platform": {
       "enum": [
+        "none",
         "colab",
         "kaggle",
         "local-nvidia",
@@ -171,6 +175,7 @@
     },
     "method": {
       "enum": [
+        "none",
         "lora",
         "qlora",
         "full",
@@ -196,11 +201,8 @@
     "members",
     "one_liner",
     "base_model",
-    "model_link",
-    "quantization",
     "runtime",
-    "hardware_tested",
-    "before_after"
+    "hardware_tested"
   ],
   "allOf": [
     {
@@ -223,6 +225,74 @@
             "type": "string",
             "pattern": "^https://[^\\s]+$",
             "maxLength": 2048
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "method": {
+            "enum": [
+              "lora",
+              "qlora",
+              "full",
+              "other"
+            ]
+          }
+        },
+        "required": [
+          "method"
+        ]
+      },
+      "then": {
+        "required": [
+          "model_link",
+          "before_after",
+          "dataset"
+        ],
+        "properties": {
+          "model_link": {
+            "type": "string",
+            "pattern": "^https://(?:huggingface\\.co|modelscope\\.cn|www\\.modelscope\\.cn)/[^\\s]+$",
+            "maxLength": 2048
+          },
+          "before_after": {
+            "required": [
+              "prompt",
+              "base_output",
+              "finetuned_output"
+            ],
+            "properties": {
+              "prompt": {
+                "type": "string",
+                "minLength": 1
+              },
+              "base_output": {
+                "type": "string",
+                "minLength": 1
+              },
+              "finetuned_output": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "dataset": {
+            "required": [
+              "description",
+              "size"
+            ],
+            "properties": {
+              "description": {
+                "type": "string",
+                "minLength": 1
+              },
+              "size": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
           }
         }
       }

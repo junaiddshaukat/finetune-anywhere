@@ -8,7 +8,7 @@ Describe the user, the task and the output in plain language.
 
 ## Why we built it
 
-Explain the real problem and why fine-tuning was appropriate.
+Explain the real problem and why your approach fits it. If you fine-tuned, say why fine-tuning was needed.
 
 ## Dataset
 
@@ -24,7 +24,7 @@ Provide complete commands that download the public artifact and run it. State th
 
 ## Before and after
 
-Show the same held-out prompt with real base and fine-tuned outputs. Describe how you judged them. Include a failure or limitation.
+If you fine-tuned, show the same held-out prompt with real base and fine-tuned outputs. If not, show real test inputs and your app's outputs. Describe how you judged them. Include a failure or limitation.
 
 ## What we learned
 

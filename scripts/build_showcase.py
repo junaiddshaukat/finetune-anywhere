@@ -45,7 +45,7 @@ def table(entries, relative_to):
             cell(d["one_liner"]),
             cell(d["base_model"]),
             cell(d.get("training_tool", "Not stated")),
-            cell(d["quantization"]),
+            cell(d.get("quantization") or "None"),
             cell(d["runtime"]),
             team,
             demo,

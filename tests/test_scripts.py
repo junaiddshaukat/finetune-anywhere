@@ -121,6 +121,7 @@ def manifest(event="community", slug="test-entry"):
         "training_tool": "trl",
         "training_platform": "other",
         "method": "lora",
+        "dataset": {"description": "Fixture data", "size": 10},
         "model_link": "https://huggingface.co/test-user/test-model",
         "quantization": "Q4_K_M",
         "runtime": "llama.cpp",
@@ -304,3 +305,25 @@ def test_tokenizer_requests_ids_not_mapping(tmp_path):
     errors, lengths, _ = validate(path, Tokenizer(), max_tokens=72)
     assert lengths == [73]
     assert "73 tokens exceeds 72" in errors[0]
+
+
+def test_run_locally_entry_without_fine_tune(tmp_path):
+    folder = make_entry(tmp_path, event="qwen-local-hackathon-2026")
+    data = yaml.safe_load((ROOT / "showcase/_template/model.yaml").read_text())
+    data.update(
+        project_name="Local assistant fixture",
+        slug="test-entry",
+        event="qwen-local-hackathon-2026",
+        members=[{"name": "Test", "github": "test-user"}],
+        one_liner="Runs a Qwen model locally",
+        base_model="unit-test/base",
+        runtime="ollama",
+        hardware_tested="Test fixture only",
+        demo_video="https://example.org/demo",
+    )
+    (folder / "model.yaml").write_text(yaml.safe_dump(data))
+    assert validate_entry(tmp_path, changed(folder, tmp_path), "2026-11-20T00:00:00Z")["passed"]
+    data["method"] = "qlora"
+    (folder / "model.yaml").write_text(yaml.safe_dump(data))
+    result = validate_entry(tmp_path, changed(folder, tmp_path), "2026-11-20T00:00:00Z")
+    assert not result["passed"]

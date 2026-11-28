@@ -1,4 +1,9 @@
 # Submission form, not a published entry. Complete it in your own entry folder.
+#
+# You only need to do one of: fine-tune, quantize, or run a Qwen model locally.
+# Did not fine-tune? Set training_tool, training_platform and method to none,
+# and leave model_link, quantization and before_after empty if they do not apply.
+# Fine-tuned? model_link and a real before_after are required.
 project_name: ''
 slug: ''
 event: ''
@@ -7,9 +12,9 @@ members:
   github: ''
 one_liner: ''
 base_model: ''
-training_tool: ''
-training_platform: ''
-method: ''
+training_tool: none
+training_platform: none
+method: none
 dataset:
   description: ''
   size: 0
@@ -18,6 +23,8 @@ model_link: ''
 quantization: ''
 runtime: ''
 hardware_tested: ''
+# Hackathon entries: link your public LinkedIn or X demo post that tags
+# M Junaid and Qwen Pakistan and uses #QwenLocalHackathon.
 demo_video: ''
 repo_link: ''
 before_after:

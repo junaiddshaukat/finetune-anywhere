@@ -4,7 +4,7 @@ Models built by people learning and applying fine-tuning. Submit during an event
 
 ## Submit your model
 
-Allow about 15 minutes once your model, public demo and write-up are ready.
+Allow about 15 minutes once your project, public demo and write-up are ready.
 
 1. Fork this repository on GitHub.
 2. Copy `showcase/_template/` to `showcase/community/your-slug/`, or use `showcase/qwen-local-hackathon-2026/your-slug/` for that event.
@@ -13,7 +13,7 @@ Allow about 15 minutes once your model, public demo and write-up are ready.
 5. Read the automated check and comment. Fix any errors on the same branch.
 6. After merge, the tables update automatically.
 
-A slug uses lowercase letters, numbers and hyphens. It must match `model.yaml`. The `event` field must equal its parent folder. Publish actual base-versus-tuned outputs from the same held-out prompt.
+A slug uses lowercase letters, numbers and hyphens. It must match `model.yaml`. The `event` field must equal its parent folder. If you fine-tuned, publish actual base-versus-tuned outputs from the same held-out prompt.
 
 ## Using git
 
@@ -45,8 +45,8 @@ Fork on GitHub. In the fork, create a new branch. Open each of the two template 
 ## Rules
 
 - One PR changes one entry folder only. Put general documentation changes in another PR.
-- No model weights. Link to a public Hugging Face or ModelScope model. Files over 5 MB are rejected.
-- Use HTTPS links. State hardware, quantization and actual before/after outputs.
+- No model weights. If you fine-tuned, link to a public Hugging Face or ModelScope model. Files over 5 MB are rejected.
+- Use HTTPS links. State hardware and runtime. Fine-tunes also state quantization and actual before/after outputs.
 - Hackathon entries need a public demo video. Entries opened after 28 November 2026, 23:59 PKT (18:59 UTC), are labelled `late` and not judged. Moving them to `community/` is welcome.
 - An automated URL warning is not a rejection. Some hosts block HEAD requests; check the link while signed out.
 
