@@ -152,6 +152,8 @@ Both models scored the exact same `test.jsonl` pair under the same `PromptBuilde
 ## Team
 
 - **Abdullah Khan Sherwani** ([@Abdullah-Khan-Sherwani](https://github.com/Abdullah-Khan-Sherwani))
+- **Saad Inam** ([@saadmemon1](https://github.com/saadmemon1))
+- **Zarmeen Rahman** ([@cybermeen](https://github.com/cybermeen))
 
 ### Credits
 

@@ -4,6 +4,10 @@ event: qwen-local-hackathon-2026
 members:
 - name: Abdullah Khan Sherwani
   github: Abdullah-Khan-Sherwani
+- name: Saad Inam
+  github: saadmemon1
+- name: Zarmeen Rahman
+  github: cybermeen
 one_liner: Qwen3.5-0.8B LoRA decision adapter for single-pass product matching (80.8% F1, 87.4% AP on 4,500 WDC test pairs).
 base_model: Qwen/Qwen3.5-0.8B
 training_tool: other
