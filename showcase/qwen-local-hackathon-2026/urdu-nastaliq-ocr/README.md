@@ -1,4 +1,4 @@
-# Urdu Nastaliq OCR: Qwen3-VL-2B, fine-tuned and running offline
+# Harf: Pocket-sized Urdu OCR, from handwritten notes to century-old books
 
 **Photo of Urdu in, editable Urdu text out, on a CPU, with no internet and no API key.**
 A 2B vision model taught one hard job: reading Nastaliq, the joined, sloping script that most OCR tools break on.

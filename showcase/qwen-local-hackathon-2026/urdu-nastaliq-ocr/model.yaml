@@ -1,4 +1,4 @@
-project_name: Urdu Nastaliq OCR (Qwen3-VL-2B LoRA)
+project_name: "Harf: Pocket-sized Urdu OCR, from handwritten notes to century-old books"
 slug: urdu-nastaliq-ocr
 event: qwen-local-hackathon-2026
 members:
