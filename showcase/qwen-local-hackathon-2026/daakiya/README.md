@@ -2,7 +2,7 @@
 
 Fine-tuned Qwen3-1.7B (QLoRA) that turns messy Pakistani order messages (English, Roman Urdu or mixed) into courier-ready booking JSON. Quantized to GGUF Q4_K_M (about 1.1 GB) and run on CPU only.
 
-[Live demo on a free 2-vCPU CPU Space](https://huggingface.co/spaces/someone786/daakiya) · [GGUF](https://huggingface.co/someone786/daakiya-qwen3-1.7b-GGUF) · [LoRA adapter and full evidence](https://huggingface.co/someone786/daakiya-qwen3-1.7b-lora) · [Code, data and notebook](https://github.com/mufeezhanif/daakiya)
+[Live CPU-only demo (free Colab, 2 vCPU, no GPU)](https://colab.research.google.com/github/mufeezhanif/daakiya/blob/main/demo/daakiya_cpu_demo.ipynb) · [GGUF](https://huggingface.co/someone786/daakiya-qwen3-1.7b-GGUF) · [LoRA adapter and full evidence](https://huggingface.co/someone786/daakiya-qwen3-1.7b-lora) · [Code, data and notebook](https://github.com/mufeezhanif/daakiya)
 
 ## What it does
 
@@ -92,7 +92,7 @@ CPU-only benchmark of the exported GGUF files: llama.cpp server with `-ngl 0` on
 | --- | --- | --- | --- | --- | --- | --- |
 | Fine-tuned Q4_K_M | 1.11 GB | 2.14 GB | 26.4 s | 4.9 tok/s | 46.4% | 87.5% |
 
-The Q8_0 and stock-base rows are added when the benchmark finishes.
+Measured with [demo/daakiya_cpu_demo.ipynb](https://github.com/mufeezhanif/daakiya/blob/main/demo/daakiya_cpu_demo.ipynb), which anyone can rerun on a free Colab CPU runtime.
 
 Held-out example (hand-written test):
 
