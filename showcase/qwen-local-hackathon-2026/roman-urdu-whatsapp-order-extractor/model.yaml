@@ -1,0 +1,30 @@
+project_name: 'Roman Urdu WhatsApp Order Extractor'
+slug: 'roman-urdu-whatsapp-order-extractor'
+event: 'qwen-local-hackathon-2026'
+members:
+- name: 'Muhammad Abdullah'
+  github: 'Muhammad08-dot'
+- name: 'M Taha Tabassum'
+  github: 'tahatabassum'
+one_liner: 'Fine-tuned Qwen3-1.7B to extract structured JSON orders from messy Roman Urdu WhatsApp messages and run 100% locally via Ollama.'
+base_model: 'Qwen/Qwen3-1.7B'
+training_tool: 'unsloth'
+training_platform: 'colab'
+method: 'qlora'
+dataset:
+  description: '110 original MIT-licensed Roman Urdu and Urdu-English WhatsApp order messages (80 train, 15 validation, 15 held-out eval) covering items, quantities, sizes, Pakistani cities, and payment methods (COD, JazzCash, Easypaisa, SadaPay, NayaPay, bank transfer).'
+  size: 110
+  link: ''
+model_link: 'https://huggingface.co/mabdullahramday56/qwen3-1.7b-roman-urdu-whatsapp-order-gguf'
+quantization: 'Q4_K_M'
+runtime: 'Ollama 0.40.18'
+hardware_tested: 'Windows PC, 20 GB RAM (CPU)'
+# Hackathon entries: link your public LinkedIn or X demo post that tags
+# M Junaid and Qwen Pakistan and uses #QwenLocalHackathon.
+demo_video: 'https://www.linkedin.com/feed/update/urn:li:activity:7532312087163727872/'
+repo_link: ''
+before_after:
+  prompt: 'Aoa bhai 3 black fleece hoodies medium size Lahore Model Town bhej dein COD par'
+  base_output: '{"item": "Aoa bhai 3 black fleece hoodies", "quantity": 1, "size": "medium", "city": "Lahore", "payment_method": "COD"}'
+  finetuned_output: '{"item": "black fleece hoodies", "quantity": 3, "size": "M", "city": "Lahore", "payment_method": "COD"}'
+
