@@ -1,0 +1,25 @@
+project_name: 'South Asia Grounded QA & Abstention (Qwen3-1.7B)'
+slug: 'south-asia-grounded-qa-qwen3'
+event: 'qwen-local-hackathon-2026'
+members:
+- name: 'Kamran Ayaz'
+  github: 'fastwithkamran'
+one_liner: 'Qwen3-1.7B fine-tuned on South Asia QA & abstention (Q4_K_M, 1.11 GB), jumping 5/20 -> 19/20 in local Ollama.'
+base_model: 'Qwen/Qwen3-1.7B'
+training_tool: 'unsloth'
+training_platform: 'colab'
+method: 'qlora'
+dataset:
+  description: '214 original South Asia grounded passages & QA pairs across all 8 SAARC countries (174 train / 20 valid / 20 disjoint held-out eval covering regional facts, negations, unanswerable traps, and quoted prompt injections).'
+  size: 214
+  link: 'https://github.com/fastwithkamran/Qwen3-1.7B_fine-tuned/tree/main/data'
+model_link: 'https://huggingface.co/fastwithkamran/Qwen3-1.7B-SouthAsia-QA-GGUF'
+quantization: 'Q4_K_M'
+runtime: 'ollama'
+hardware_tested: 'Windows 10, 7.94 GB RAM, NVIDIA Quadro K4000'
+demo_video: 'https://x.com/fastwithkamran/status/2126589758449275209'
+repo_link: 'https://github.com/fastwithkamran/Qwen3-1.7B_fine-tuned'
+before_after:
+  prompt: "Passage: Ranikot Fort in Jamshoro District, Sindh, Pakistan, has a stone-and-lime perimeter wall stretching over 30 kilometers across barren hills, earning the nickname 'The Great Wall of Sindh'.\nQuestion: Is Ranikot Fort located in Kashmir, India?"
+  base_output: 'The passage does not specify that Ranikot Fort is located in Kashmir, India.'
+  finetuned_output: 'No. Ranikot Fort is in Jamshoro District, Sindh, Pakistan.'
