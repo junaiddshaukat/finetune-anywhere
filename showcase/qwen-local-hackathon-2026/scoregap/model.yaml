@@ -1,0 +1,36 @@
+project_name: ScoreGap
+slug: scoregap
+event: qwen-local-hackathon-2026
+members:
+- github: faizanamer123
+- github: abdullahiftikharcode
+one_liner: Offline Qwen3-1.7B that drafts the CVSS v3.1 vector and CWE NIST would assign to a vulnerability description
+base_model: Qwen/Qwen3-1.7B (revision 70d244cc86ccca08cf5af4e1e306ecf908b1ad5e)
+training_tool: unsloth
+training_platform: kaggle
+method: lora
+dataset:
+  description: 'NIST-scored CVEs from the NVD JSON 2.0 feeds (snapshot 2026-11-24, SHA-256 verified). Label = the
+    CVSS v3.1 vector whose source is nvd@nist.gov, plus NIST''s CWE (else the vendor''s). Split by publication date:
+    training 2019-2025 (the model used the newest 80,000 rows, 2022-2025), validation = held-out 2025, test = 2,000
+    CVEs published in 2026, frozen before training. Exact and near-duplicates of test text removed (TF-IDF cosine
+    >= 0.90). NVD data are U.S. Government works; CVE/CWE text used under MITRE''s terms.'
+  size: 79966
+  link: https://nvd.nist.gov/vuln/data-feeds
+model_link: https://huggingface.co/faizanamir/scoregap-qwen3-1.7b-cvss
+quantization: Q4_K_M GGUF (llama.cpp build 12359), 1.1 GB; all reported results use this file
+runtime: llama.cpp
+hardware_tested: Apple MacBook Pro 14-inch (M1 Pro, 16 GB RAM, macOS 26.3.1), llama.cpp Metal. 0.76 s per CVE in
+  the app (median), 1.97 CVEs/s batched, 1.6 GB RAM; CPU only 2.6 s per CVE
+demo_video: https://www.linkedin.com/posts/faizan-amir-88875a352_qwenlocalhackathon-ugcPost-7532399856154198017-bVNf/
+repo_link: https://github.com/faizanamer123/scoregap
+before_after:
+  prompt: '[Same ScoreGap system prompt for both models; held-out test CVE-2026-49200, published 2026-05-29, drawn
+    at random] Vulnerability description:
+
+    The acer_cgi.log file in the device firmware is accessible without authentication via the web interface. This
+    file contains cleartext login credentials (for web and Telnet), leading to unauthorized system access.'
+  base_output: "{\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N\",\n  \"cwe\": \"CWE-229\"\n}  ->\
+    \ 7.5 HIGH, 6/8 metrics match NIST"
+  finetuned_output: '{"vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H", "cwe": "CWE-312"}  -> 9.8 CRITICAL,
+    8/8 (NIST: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H, 9.8)'
